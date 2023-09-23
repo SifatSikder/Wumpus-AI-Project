@@ -9,10 +9,10 @@ var stench, breeze, died, scream, glitter, haveGold, remainingArrows;
 
 function start(GAME) {
     game = GAME
-    knowledgeBase.createKnowledgeBase(4)
+    knowledgeBase.createKnowledgeBase(game.size(), position)
     direction = knowledgeBase.NORTH;
     knowledgeBase.registerMove([position[0], position[1]]);
-    while (true) {
+    while (!haveGold) {
         play();
     }
 }
@@ -21,7 +21,7 @@ function move() {
 
     game.moveAgent()
     knowledgeBase.registerMove([position[0], position[1]]);
-    processPercepts(x, y);
+    processPercepts([position[0], position[1]]);
 }
 
 function processPercepts(position) {
@@ -32,8 +32,10 @@ function processPercepts(position) {
         knowledgeBase.tellBreeze(position);
     if (stench)
         knowledgeBase.tellStench(position);
-    if (!breeze && !stench)
-        knowledgeBase.tellClear(position);
+    if (!breeze)
+        knowledgeBase.tellPitClear(position);
+    if (!stench)
+        knowledgeBase.tellWumpusClear(position);
 
 }
 
@@ -51,6 +53,7 @@ function shoot() {
 
 function pickGold() {
     game.agentGrabsGold();
+    haveGold = true
     console.log("Agent picked up the gold.");
 }
 
@@ -71,6 +74,68 @@ function isValidPosition(position) {
     return false
 }
 
+
+function lookBack(riskFactor) {
+    let directions = knowledgeBase.DIRECTIONS;
+    for (let i = knowledgeBase.moves().length - 1; i >= 0; i--) {
+        let position = knowledgeBase.moves()[i];
+
+
+        for (let j = 0; j < directions.length; j++) {
+            let x = position[0] + directions[j][0];
+            let y = position[1] + directions[j][1];
+            if (isValidPosition([x, y]) && knowledgeBase.askPath([x, y]) == 0) {
+                // And it match
+                if (knowledgeBase.askWumpus([x, y]) + knowledgeBase.askPit([x, y]) <= riskFactor) {
+                    console.log("lookback succeeded");
+                    return i;
+                }
+            }
+        }
+    }
+    console.log("lookback failed");
+    return -1;
+}
+
+
+function backtrack(moves, riskFactor) {
+    let i = lookBack(riskFactor);
+    if (i < 0) {
+        return false;
+    }
+
+    let cell = moves[i];
+    console.log("backtracking to [ " + cell[0] + "," + cell[1] + " ]");
+    let tempMoves = moves
+    let tempTurns = knowledgeBase.turns()
+    console.log("moves.size:" + tempMoves.length + "\tturns.size:" + tempTurns.length);
+    try {
+        turn(left);
+        turn(left);
+        move();
+        while (position[0] != cell[0] || position[1] != cell[1]) {
+            let nextMove = tempMoves[tempMoves.length - 1];
+            if (position[0] + direction[0] == nextMove[0] && position[1] + direction[1] == nextMove[1]) {
+                move();
+                tempMoves.pop()
+            } else {
+                let turn = tempTurns[tempTurns.length - 1];
+                if (turn == left) {
+                    turn(right);
+                    tempTurns.pop()
+                } else if (turn == right) {
+                    turn(left);
+                    tempTurns.pop();
+                }
+            }
+        }
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+
 function play() {
     if (knowledgeBase.askGlitter([position[0], position[1]])) {
         pickGold();
@@ -78,7 +143,7 @@ function play() {
     }
     let riskFactor = -2;
     while (true) {
-        console.log("infer()\n\tpos:[" + position[0] + "," + position[1] + "]\n\tdirection:{" + direction[0] + "," + direction[1] + "}\n\triskFactor:" + riskFactor);
+        console.log("Status:\n\tCurrent position:[" + position[0] + "," + position[1] + "]\n\tCurrent direction:{" + direction[0] + "," + direction[1] + "}\n\triskFactor:" + riskFactor);
 
         // get dangerScore for each surrounding cell
         let forwardScore = Number.MAX_VALUE
@@ -132,13 +197,13 @@ function play() {
             knowledgeBase.print();
             return;
         } else {
-            // let backtracked = backtrack(knowledgeBase.moveStack, riskFactor);
-            // if (backtracked) {
-            //     console.log("\tbacktracked");
-            //     return;
-            // } else {
-            //     console.log("\tNo suitable backtrack found");
-            // }
+            let backtracked = backtrack(knowledgeBase.moves(), riskFactor);
+            if (backtracked) {
+                console.log("\tbacktracked");
+                return;
+            } else {
+                console.log("\tNo suitable backtrack found");
+            }
         }
         riskFactor++;
     }

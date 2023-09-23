@@ -25,10 +25,13 @@ function initializeBoard(size) {
     return board
 }
 
-function createKnowledgeBase(size) {
+
+
+function createKnowledgeBase(size, position) {
     pathMap = initializeBoard(size)
     wumpusMap = initializeBoard(size)
     pitMap = initializeBoard(size)
+    tellClear(position)
 }
 
 function registerMove(move) {
@@ -45,22 +48,10 @@ function registerMove(move) {
 function registerTurn(direction) {
     if (direction == 0 || direction == 1) {
         turns.push(direction)
-    } else {
-        process.stdout.write("invalid direction passed to registerTurn");
     }
 }
 
-function tellClear(position) {
 
-    DIRECTIONS.forEach(direction => {
-        x = position[0] + direction[0]
-        y = position[1] + direction[1]
-        if (x >= 0 && x < pathMap.length && y >= 0 && y < pathMap.length) {
-            wumpusMap[x][y] = CLEAR;
-            pitMap[x][y] = CLEAR;
-        }
-    });
-}
 
 function askPath(position) {
     try {
@@ -116,6 +107,42 @@ function tellBreeze(position) {
         });
     }
 }
+
+function tellClear(position) {
+
+    DIRECTIONS.forEach(direction => {
+        x = position[0] + direction[0]
+        y = position[1] + direction[1]
+        if (x >= 0 && x < pathMap.length && y >= 0 && y < pathMap.length) {
+            wumpusMap[x][y] = CLEAR;
+            pitMap[x][y] = CLEAR;
+        }
+    });
+}
+
+function tellPitClear(position) {
+
+    DIRECTIONS.forEach(direction => {
+        x = position[0] + direction[0]
+        y = position[1] + direction[1]
+        if (x >= 0 && x < pathMap.length && y >= 0 && y < pathMap.length) {
+            pitMap[x][y] = CLEAR;
+        }
+    });
+}
+function tellWumpusClear(position) {
+
+    DIRECTIONS.forEach(direction => {
+        x = position[0] + direction[0]
+        y = position[1] + direction[1]
+        if (x >= 0 && x < pathMap.length && y >= 0 && y < pathMap.length) {
+            wumpusMap[x][y] = CLEAR;
+        }
+    });
+}
+
+
+
 
 function tellGlitter(position) {
     gliterPosition[0] = position[0]
@@ -196,13 +223,15 @@ module.exports = {
     createKnowledgeBase,
     registerMove,
     registerTurn,
-    tellClear,
     askPath,
     askWumpus,
     askPit,
     tellStench,
     tellBreeze,
     tellGlitter,
+    tellClear,
+    tellPitClear,
+    tellWumpusClear,
     askGlitter,
     tellScream,
     print,

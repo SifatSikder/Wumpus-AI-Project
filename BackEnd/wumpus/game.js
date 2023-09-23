@@ -13,7 +13,6 @@ function createGame(SIZE, wumpusProbablity, pitProbablity, AGENT) {
     agent.setRemainingArrows(world.numberOfWumpus())
 }
 
-
 function validSquares(position) {
     let x = position[0]
     let y = position[1]
@@ -37,6 +36,8 @@ function moveAgent() {
         console.log('agent died.gameover+system should exit');
     }
     agent.setPosition([x, y])
+
+
 
     let stench = false;
     validSquares([x, y]).forEach(position => {
@@ -113,7 +114,7 @@ function processShot() {
 function agentGrabsGold() {
     if (world.world()[agent.getPosition()[0]][agent.getPosition()[1]] == 3) {
         world.world()[agent.getPosition()[0]][agent.getPosition()[1]] = 0;
-        console.log('agent died.gameover+system should exit');
+        console.log('Agent won');
         score += 1000;
     }
 }
@@ -126,6 +127,5 @@ module.exports = {
     agentGrabsGold,
     score: () => score,
     size: () => size,
-    // size,
 
 }
