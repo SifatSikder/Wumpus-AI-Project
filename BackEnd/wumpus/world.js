@@ -32,7 +32,7 @@ function generateWorld(size, wumpusProbablity, pitProbablity) {
     // populateWorld(wumpusProbablity, pitProbablity);
     // printWorld(size)
 
-    world = [[4, 0, 2, 0], [0, 0, 0, 0], [1, 3, 2, 0], [0, 0, 0, 2]]
+    world = [[4, 0, 1, 0], [0, 0, 0, 0], [2, 3, 2, 0], [0, 0, 0, 2]]
     startingPosition = [0, 0]
     numberOfWumpus = 1
     printWorld(size)

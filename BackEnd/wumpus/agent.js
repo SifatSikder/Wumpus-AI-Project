@@ -15,6 +15,7 @@ function start(GAME) {
     while (!haveGold) {
         play();
     }
+    console.log(knowledgeBase.moves());
 }
 
 function move() {
