@@ -6,4 +6,13 @@
 
 
 
+const agent = require('./wumpus/agent')
+const game = require('./wumpus/game')
+game.createGame(4, 0.1, 0.1, agent)
+
+
+agent.start(game)
+
+
+
 

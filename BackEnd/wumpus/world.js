@@ -24,12 +24,17 @@ function isSquareEmpty(i, j) {
 }
 
 function generateWorld(size, wumpusProbablity, pitProbablity) {
-    world = initializeBoard(size)
-    numberOfWumpus = 0;
+    // numberOfWumpus = 0;
 
-    setStartLocation()
-    placeGold()
-    populateWorld(wumpusProbablity, pitProbablity);
+    // world = initializeBoard(size)
+    // setStartLocation()
+    // placeGold()
+    // populateWorld(wumpusProbablity, pitProbablity);
+    // printWorld(size)
+
+    world = [[4, 0, 2, 0], [0, 0, 0, 0], [1, 3, 2, 0], [0, 0, 0, 2]]
+    startingPosition = [0, 0]
+    numberOfWumpus = 1
     printWorld(size)
 
 }
@@ -101,15 +106,15 @@ module.exports = {
     numberOfWumpus: () => numberOfWumpus,
     startingPosition: () => startingPosition,
     world: () => world,
+    setSquare: (position, value) => world[position[0]][position[1]] = value
 }
 
 
+// generateWorld(4, 0.1, 0.1)
 
 
+// generateWorld(4, 0.1, 0.1)
 
-
-generateWorld(4, 0.1, 0.1)
-printWorld(4)
 
 // console.log(world);
 // console.log();

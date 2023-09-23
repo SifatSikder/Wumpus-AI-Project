@@ -31,19 +31,6 @@ function createKnowledgeBase(size) {
     pitMap = initializeBoard(size)
 }
 
-function perceive(position, map) {
-
-    // ensure that the neighboring cell is on the map
-    //if yes then increase the square value by 1 in the map
-    DIRECTIONS.forEach(direction => {
-        x = position[0] + direction[0]
-        y = position[1] + direction[1]
-        if (x >= 0 && x < map.length && y >= 0 && y < map.length) {
-            map[x][y]++;
-        }
-    });
-}
-
 function registerMove(move) {
 
     moves.push(move);
@@ -103,7 +90,16 @@ function tellStench(position) {
     let x = position[0]
     let y = position[1]
     if (pathMap[x][y] <= 1) {
-        perceive(x, y, wumpusMap);
+
+        // ensure that the neighboring cell is on the map
+        //if yes then increase the square value by 1 in the map
+        DIRECTIONS.forEach(direction => {
+            x = position[0] + direction[0]
+            y = position[1] + direction[1]
+            if (x >= 0 && x < wumpusMap.length && y >= 0 && y < wumpusMap.length) {
+                wumpusMap[x][y]++;
+            }
+        });
     }
 }
 
@@ -111,7 +107,13 @@ function tellBreeze(position) {
     let x = position[0]
     let y = position[1]
     if (pathMap[x][y] <= 1) {
-        perceive(x, y, pitMap);
+        DIRECTIONS.forEach(direction => {
+            x = position[0] + direction[0]
+            y = position[1] + direction[1]
+            if (x >= 0 && x < pitMap.length && y >= 0 && y < pitMap.length) {
+                pitMap[x][y]++;
+            }
+        });
     }
 }
 
@@ -143,6 +145,7 @@ function tellScream(position, direction) {
 function print() {
     let x = 0;
     let y = 0;
+    let result = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 
     // print the values for each cell
     for (y = pathMap.length - 1; y >= 0; y--) {
@@ -150,22 +153,27 @@ function print() {
             process.stdout.write(y + "|");
         }
         for (x = 0; x < pathMap.length; x++) {
+            let row = []
             let lastX = moves[moves.length - 1][0];
             let lastY = moves[moves.length - 1][1];
             if (lastX == x && lastY == y) {
-                process.stdout.write("o ");
+                process.stdout.write("o "); //where is the agent right now
+                result[x][y] = 'o'
             } else if (pathMap[x][y] > 0) {
-                process.stdout.write("+ ");
+                process.stdout.write("+ "); //all visited squares
+                result[x][y] = '+'
             } else if (wumpusMap[x][y] < 0 && pitMap[x][y] < 0) {
-                process.stdout.write("  ");
+                process.stdout.write("  "); //clear squares
+                result[x][y] = ' '
             } else if (wumpusMap[x][y] == 0 && pitMap[x][y] == 0) {
-                process.stdout.write("? ");
+                process.stdout.write("? "); //confused
+                result[x][y] = '?'
             } else if (wumpusMap[x][y] >= pitMap[x][y]) {
-                process.stdout.write("w ");
+                process.stdout.write("w "); //wumpus
+                result[x][y] = 'w'
             } else if (pitMap[x][y] > 0) {
-                process.stdout.write("p ");
-            } else {
-                process.stdout.write("! ");
+                process.stdout.write("p "); // pit
+                result[x][y] = 'p'
             }
         }
         x = 0;
@@ -180,24 +188,50 @@ function print() {
         process.stdout.write(" " + i);
     }
     console.log();
+    console.log(result);
 }
 
 
-createKnowledgeBase(4)
-registerMove([0, 0])
-registerMove([1, 0])
-tellClear([1, 0]);
-registerMove([2, 0]);
-tellStench([2, 0]);
-tellClear([0, 0]);
-tellClear([0, 1]);
-tellStench([0, 2]);
-tellClear([0, 1]);
-tellClear([0, 0]);
-tellClear([1, 0]);
-tellClear([2, 0]);
-tellBreeze([3, 0]);
-tellClear([3, 1]);
-tellStench([3, 2]);
+module.exports = {
+    createKnowledgeBase,
+    registerMove,
+    registerTurn,
+    tellClear,
+    askPath,
+    askWumpus,
+    askPit,
+    tellStench,
+    tellBreeze,
+    tellGlitter,
+    askGlitter,
+    tellScream,
+    print,
 
-print();
+    moves: () => moves,
+    turns: () => turns,
+    gliterPosition: () => gliterPosition,
+
+    pathMap: () => pathMap,
+    wumpusMap: () => wumpusMap,
+    pitMap: () => pitMap,
+    EAST, WEST, NORTH, SOUTH, DIRECTIONS
+}
+
+
+// createKnowledgeBase(4)
+// registerMove([0, 0])
+// registerMove([1, 0])
+// tellClear([1, 0]);
+// registerMove([2, 0]);
+// tellStench([2, 0]);
+// tellClear([0, 0]);
+// tellClear([0, 1]);
+// tellStench([0, 2]);
+// tellClear([0, 1]);
+// tellClear([0, 0]);
+// tellClear([1, 0]);
+// tellClear([2, 0]);
+// tellBreeze([3, 0]);
+// tellClear([3, 1]);
+// tellStench([3, 2]);
+// print();
