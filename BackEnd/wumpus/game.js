@@ -13,16 +13,42 @@ function createGame(SIZE, wumpusProbablity, pitProbablity, AGENT) {
     agent.setRemainingArrows(world.numberOfWumpus())
 }
 
-function validSquares(position) {
-    let x = position[0]
-    let y = position[1]
-    let results = []
-    if (x - 1 >= 0 && x - 1 < size && y >= 0 && y < size) results.push([x - 1, y])
-    if (x + 1 >= 0 && x + 1 < size && y >= 0 && y < size) results.push([x + 1, y])
-    if (x >= 0 && x < size && y + 1 >= 0 && y + 1 < size) results.push([x, y + 1])
-    if (x >= 0 && x < size && y - 1 >= 0 && y - 1 < size) results.push([x, y - 1])
-    return results
+
+function setStench(POSITION) {
+
+    let stench = false;
+    validSquares(POSITION).forEach(position => {
+        if (world.world()[position[0]][position[1]] == 1) {
+            stench = true
+        }
+    })
+    agent.setStench(stench);
+
 }
+
+
+function setBreeze(POSITION) {
+
+    let breeze = false;
+    validSquares(POSITION).forEach(position => {
+        if (world.world()[position[0]][position[1]] == 2) {
+            breeze = true
+        }
+    })
+    agent.setBreeze(breeze);
+
+}
+
+function setGlitter(POSITION) {
+
+    if (world.world()[POSITION[0]][POSITION[1]] == 3)
+        agent.setGlitter(true)
+
+    else
+        agent.setGlitter(false)
+
+}
+
 
 function moveAgent() {
     let oldPosition = agent.getPosition()
@@ -34,34 +60,13 @@ function moveAgent() {
         score -= 1000;
         agent.setDied(true)
         console.log('agent died.gameover+system should exit');
+        return
     }
     agent.setPosition([x, y])
 
-
-
-    let stench = false;
-    validSquares([x, y]).forEach(position => {
-        if (world.world()[position[0]][position[1]] == 1) {
-            stench = true
-        }
-    })
-    agent.setStench(stench);
-
-
-    let breeze = false;
-    validSquares([x, y]).forEach(position => {
-        if (world.world()[position[0]][position[1]] == 2) {
-            breeze = true
-        }
-    })
-    agent.setBreeze(breeze);
-
-
-    if (world.world()[x][y] == 3)
-        agent.setGlitter(true)
-
-    else
-        agent.setGlitter(false)
+    setStench([x, y])
+    setBreeze([x, y])
+    setGlitter([x, y])
 
     score--;
     return true;
@@ -97,18 +102,50 @@ function turnAgent(direction) {
 }
 
 function processShot() {
+
+
+    let [ROW, COL] = agent.getPosition()
+
     if (agent.equals(agent.getDirection(), knowledgeBase.NORTH)) {
-        //fire north. (0, 0) is in the bottom left corner
-        for (let i = agent.getPosition()[1]; i < world.world().length; i++) {
-            if (world.world()[agent.getPosition()[0]][i] == 1) {
-                world.setSquare([agent.getPosition()[0], i], 0)
+        for (let col = COL; col < world.world().length; col++) {
+            if (world.world()[ROW][col] == 1) {
+                world.setSquare([ROW, col], 0)
                 agent.setScream(true)
-                return;
             }
         }
     }
 
-    //sometodo
+    else if (agent.equals(agent.getDirection(), knowledgeBase.SOUTH)) {
+
+        for (let col = COL; col >= 0; col--) {
+            if (world.world()[ROW][COL] == 1) {
+                world.setSquare([ROW, col], 0)
+                agent.setScream(true)
+
+            }
+        }
+    }
+
+    else if (agent.equals(agent.getDirection(), knowledgeBase.EAST)) {
+
+        for (let row = ROW; row < world.world().length; row++) {
+            if (world.world()[row][COL] == 1) {
+                world.setSquare([row, COL], 0)
+                agent.setScream(true)
+
+            }
+        }
+    }
+
+    else if (agent.equals(agent.getDirection(), knowledgeBase.EAST)) {
+
+        for (let row = ROW; row >= 0; row--) {
+            if (world.world()[row][COL] == 1) {
+                world.setSquare([row, COL], 0)
+                agent.setScream(true)
+            }
+        }
+    }
 }
 
 function agentGrabsGold() {
@@ -119,13 +156,29 @@ function agentGrabsGold() {
     }
 }
 
+
+
+
+
+
+function validSquares(position) {
+    let x = position[0]
+    let y = position[1]
+    let results = []
+    if (x - 1 >= 0 && x - 1 < size && y >= 0 && y < size) results.push([x - 1, y])
+    if (x + 1 >= 0 && x + 1 < size && y >= 0 && y < size) results.push([x + 1, y])
+    if (x >= 0 && x < size && y + 1 >= 0 && y + 1 < size) results.push([x, y + 1])
+    if (x >= 0 && x < size && y - 1 >= 0 && y - 1 < size) results.push([x, y - 1])
+    return results
+}
+
 module.exports = {
     createGame,
     turnAgent,
     moveAgent,
     processShot,
     agentGrabsGold,
+    validSquares,
     score: () => score,
     size: () => size,
-
 }

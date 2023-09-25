@@ -25,8 +25,6 @@ function initializeBoard(size) {
     return board
 }
 
-
-
 function createKnowledgeBase(size, position) {
     pathMap = initializeBoard(size)
     wumpusMap = initializeBoard(size)
@@ -50,8 +48,6 @@ function registerTurn(direction) {
         turns.push(direction)
     }
 }
-
-
 
 function askPath(position) {
     try {
@@ -77,6 +73,26 @@ function askPit(position) {
     }
 }
 
+function askGlitter(position) {
+    if (gliterPosition[0] == position[0] && gliterPosition[1] == position[1]) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function tellClear(position) {
+
+    DIRECTIONS.forEach(direction => {
+        x = position[0] + direction[0]
+        y = position[1] + direction[1]
+        if (x >= 0 && x < pathMap.length && y >= 0 && y < pathMap.length) {
+            wumpusMap[x][y] = CLEAR;
+            pitMap[x][y] = CLEAR;
+        }
+    });
+}
+
 function tellStench(position) {
     let x = position[0]
     let y = position[1]
@@ -94,6 +110,17 @@ function tellStench(position) {
     }
 }
 
+function tellWumpusClear(position) {
+
+    DIRECTIONS.forEach(direction => {
+        x = position[0] + direction[0]
+        y = position[1] + direction[1]
+        if (x >= 0 && x < pathMap.length && y >= 0 && y < pathMap.length) {
+            wumpusMap[x][y] = CLEAR;
+        }
+    });
+}
+
 function tellBreeze(position) {
     let x = position[0]
     let y = position[1]
@@ -108,18 +135,6 @@ function tellBreeze(position) {
     }
 }
 
-function tellClear(position) {
-
-    DIRECTIONS.forEach(direction => {
-        x = position[0] + direction[0]
-        y = position[1] + direction[1]
-        if (x >= 0 && x < pathMap.length && y >= 0 && y < pathMap.length) {
-            wumpusMap[x][y] = CLEAR;
-            pitMap[x][y] = CLEAR;
-        }
-    });
-}
-
 function tellPitClear(position) {
 
     DIRECTIONS.forEach(direction => {
@@ -130,31 +145,10 @@ function tellPitClear(position) {
         }
     });
 }
-function tellWumpusClear(position) {
-
-    DIRECTIONS.forEach(direction => {
-        x = position[0] + direction[0]
-        y = position[1] + direction[1]
-        if (x >= 0 && x < pathMap.length && y >= 0 && y < pathMap.length) {
-            wumpusMap[x][y] = CLEAR;
-        }
-    });
-}
-
-
-
 
 function tellGlitter(position) {
     gliterPosition[0] = position[0]
     gliterPosition[1] = position[1]
-}
-
-function askGlitter(position) {
-    if (gliterPosition[0] == position[0] && gliterPosition[1] == position[1]) {
-        return true;
-    } else {
-        return false;
-    }
 }
 
 function tellScream(position, direction) {
@@ -173,7 +167,7 @@ function print() {
     let x = 0;
     let y = 0;
     let result = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-
+    // let result = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
     // print the values for each cell
     for (y = pathMap.length - 1; y >= 0; y--) {
         if (x == 0) {
@@ -218,7 +212,6 @@ function print() {
     console.log(result);
 }
 
-
 module.exports = {
     createKnowledgeBase,
     registerMove,
@@ -243,7 +236,7 @@ module.exports = {
     pathMap: () => pathMap,
     wumpusMap: () => wumpusMap,
     pitMap: () => pitMap,
-    EAST, WEST, NORTH, SOUTH, DIRECTIONS
+    EAST, WEST, NORTH, SOUTH, DIRECTIONS, CLEAR
 }
 
 
