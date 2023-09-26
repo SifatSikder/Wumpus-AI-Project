@@ -1,0 +1,20 @@
+<div class="matrix-container" [ngClass]="{'started': gameStarted}">
+  <!-- <button (click)="startGame()" class="start-button">Start Game</button> -->
+  <table class="matrix-grid">
+    <tr *ngFor="let row of grid; let i = index">
+      <td *ngFor="let cell of row; let j = index" class="matrix-cell" [ngClass]="{'with-image': cell.imageType, 'hide-grid': gameStarted && !(i === 9 && j === 0)}">
+        <!-- <img [src]="cell.imageType === 'Type1' ? 'assets/w1.jpg' : 'assets/pit.jpg'" alt="Type 1 Image" /> -->
+        <img *ngIf="cell.imageType === 'Type1'" src="assets/w1.jpg" alt="Type 1 Image" />
+        <img *ngIf="cell.imageType === 'Type2'" src="assets/pit.jpg" alt="Type 2 Image" />
+        <!-- <img *ngIf="i === 9 && j===0" class="move" src="assets/move.png" alt="Type 2 Image" /> -->
+        <!-- app.component.html -->
+        <div *ngIf="i === 9 && j === 0" class="move"></div>
+
+        <img *ngIf="i===9 && j===0" src="assets/move.png" alt="Type" />
+      </td>
+     
+
+    </tr> 
+  </table>
+  <button (click)="startGame()" class="start-button">Start Game</button>
+</div>
