@@ -57,21 +57,26 @@ function setValueInADirection(map, position, direction, value) {
     if (direction[0] == knowledgeBase.NORTH[0] && direction[1] == knowledgeBase.NORTH[1]) {
         for (let col = COL; col < map.length; col++) {
             map[ROW][col] = value;
+            knowledgeBase.wumpusPermanentlyCleared().push([ROW, col])
         }
     }
     else if (direction[0] == knowledgeBase.SOUTH[0] && direction[1] == knowledgeBase.SOUTH[1]) {
         for (let col = COL; col >= 0; col--) {
             map[ROW][col] = value;
+            knowledgeBase.wumpusPermanentlyCleared().push([ROW, col])
         }
     }
     else if (direction[0] == knowledgeBase.EAST[0] && direction[1] == knowledgeBase.EAST[1]) {
         for (let row = ROW; row < map.length; row++) {
             map[row][COL] = value;
+            knowledgeBase.wumpusPermanentlyCleared().push([row, COL])
         }
     }
     else if (direction[0] == knowledgeBase.WEST[0] && direction[1] == knowledgeBase.WEST[1]) {
         for (let row = ROW; row > -1; row--) {
             map[row][COL] = value;
+            knowledgeBase.wumpusPermanentlyCleared().push([row, COL])
+
         }
     }
 
@@ -82,11 +87,9 @@ function shoot() {
     remainingArrows--;
     console.log("Agent loosed an arrow.");
     game.processShot();
-    if (scream) {
-        setValueInADirection(knowledgeBase.wumpusMap(), position, direction, knowledgeBase.CLEAR)
-    }
+    setValueInADirection(knowledgeBase.wumpusMap(), position, direction, knowledgeBase.CLEAR)
 
-    // processPercepts([position[0], position[1]]);
+
 }
 
 function pickGold() {
@@ -154,9 +157,67 @@ function backtrack(moves, riskFactor) {
     }
 }
 
+
+function WumpusloopSituation() {
+    let loop = true;
+    let squares = validSquares(position)
+
+
+    let allVisited = true;
+    for (let i = 0; i < squares.length; i++) {
+        if (!knowledgeBase.alreadyVisited(squares[i])) {
+            allVisited = false;
+            break;
+        }
+    }
+
+    if (allVisited) return false
+    else {
+
+        for (let i = 0; i < squares.length; i++) {
+            if (knowledgeBase.askWumpus(squares[i]) == knowledgeBase.CLEAR && !knowledgeBase.alreadyVisited(squares[i])) {
+                loop = false;
+                break;
+            }
+        }
+        return loop
+    }
+
+}
+
+
+
+function pitloopSituation() {
+    let loop = true;
+    let squares = validSquares(position)
+
+
+    let allVisited = true;
+    for (let i = 0; i < squares.length; i++) {
+        if (!knowledgeBase.alreadyVisited(squares[i])) {
+            allVisited = false;
+            break;
+        }
+    }
+
+    if (allVisited) return false
+    else {
+
+        for (let i = 0; i < squares.length; i++) {
+            if (knowledgeBase.askPit(squares[i]) == knowledgeBase.CLEAR && !knowledgeBase.alreadyVisited(squares[i])) {
+                loop = false;
+                break;
+            }
+        }
+        return loop
+    }
+
+}
+
 function loopBreak() {
+    if (remainingArrows <= 0) return false;
     let valid_squares = validSquares(position)
-    let squares = []
+    let unvisited_squares = []
     valid_squares.forEach((square) => {
 
         let duplicate = false;
@@ -166,22 +227,41 @@ function loopBreak() {
                 break;
             }
         }
-        if (!duplicate) squares.push(square)
+        if (!duplicate) unvisited_squares.push(square)
     })
 
-    let probableWumpusSquare = squares[0]
-    for (let i = 1; i < squares.length; i++) {
-        if (knowledgeBase.askWumpus(squares[i]) > knowledgeBase.askWumpus(probableWumpusSquare))
-            probableWumpusSquare = squares[i]
+    let probableWumpusSquare = unvisited_squares[0]
+    for (let i = 1; i < unvisited_squares.length; i++) {
+        if (knowledgeBase.askWumpus(unvisited_squares[i]) > knowledgeBase.askWumpus(probableWumpusSquare))
+            probableWumpusSquare = unvisited_squares[i]
     }
 
 
     //find the direction by subtracting current position from final location(probableWumpusSquare) 
-    direction[0] = probableWumpusSquare[0] - position[0]
-    direction[1] = probableWumpusSquare[1] - position[1]
+    let row = probableWumpusSquare[0] - position[0]
+    let col = probableWumpusSquare[1] - position[1]
 
-    shoot()
+    if (row == 0 && col == 1) {
+        direction = knowledgeBase.NORTH
+    }
+    else if (row == 0 && col == -1) {
+        direction = knowledgeBase.SOUTH
+    }
+
+    else if (row == 1 && col == 0) {
+        direction = knowledgeBase.EAST
+    }
+
+    else if (row == -1 && col == 0) {
+        direction = knowledgeBase.WEST
+    }
+
+
+    shoot();
+    return true
+
 }
+
 
 function play() {
     if (knowledgeBase.askGlitter([position[0], position[1]])) {
@@ -250,8 +330,15 @@ function play() {
                 return;
             } else {
                 console.log("\tNo suitable backtrack found");
-                loopBreak();
-                return;
+
+                if (WumpusloopSituation()) {
+                    if (loopBreak()) {
+                        return;
+                    }
+                }
+                if (pitloopSituation()) {
+                    console.log('pit loop situation');
+                }
             }
         }
         riskFactor++;

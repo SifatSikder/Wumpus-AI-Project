@@ -11,6 +11,7 @@ var gliterPosition = [];
 
 var pathMap = [];
 var wumpusMap = [];
+var wumpusPermanentlyCleared = [];
 var pitMap = [];
 
 function initializeBoard(size) {
@@ -93,6 +94,39 @@ function tellClear(position) {
     });
 }
 
+function alreadyVisited(position) {
+
+    let visited = false;
+    for (let i = 0; i < moves.length; i++) {
+        if (moves[i][0] == position[0] && moves[i][1] == position[1]) {
+            visited = true;
+            break;
+        }
+    }
+    return visited
+
+}
+
+
+function wumpusAlreadyCleared(position) {
+    let x = position[0]
+    let y = position[1]
+
+    if (wumpusMap[x][y] == CLEAR) return true
+}
+
+
+function pitAlreadyCleared(position) {
+    let x = position[0]
+    let y = position[1]
+
+    if (pitMap[x][y] == CLEAR) return true
+}
+
+
+
+
+
 function tellStench(position) {
     let x = position[0]
     let y = position[1]
@@ -103,7 +137,7 @@ function tellStench(position) {
         DIRECTIONS.forEach(direction => {
             x = position[0] + direction[0]
             y = position[1] + direction[1]
-            if (x >= 0 && x < wumpusMap.length && y >= 0 && y < wumpusMap.length) {
+            if (x >= 0 && x < wumpusMap.length && y >= 0 && y < wumpusMap.length && !alreadyVisited([x, y]) && !wumpusAlreadyCleared([x, y])) {
                 wumpusMap[x][y]++;
             }
         });
@@ -128,7 +162,7 @@ function tellBreeze(position) {
         DIRECTIONS.forEach(direction => {
             x = position[0] + direction[0]
             y = position[1] + direction[1]
-            if (x >= 0 && x < pitMap.length && y >= 0 && y < pitMap.length) {
+            if (x >= 0 && x < pitMap.length && y >= 0 && y < pitMap.length && !alreadyVisited([x, y]) && !pitAlreadyCleared([x, y])) {
                 pitMap[x][y]++;
             }
         });
@@ -228,6 +262,7 @@ module.exports = {
     askGlitter,
     tellScream,
     print,
+    alreadyVisited,
 
     moves: () => moves,
     turns: () => turns,
@@ -235,6 +270,7 @@ module.exports = {
 
     pathMap: () => pathMap,
     wumpusMap: () => wumpusMap,
+    wumpusPermanentlyCleared: () => wumpusPermanentlyCleared,
     pitMap: () => pitMap,
     EAST, WEST, NORTH, SOUTH, DIRECTIONS, CLEAR
 }

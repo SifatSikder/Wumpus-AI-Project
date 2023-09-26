@@ -52,7 +52,6 @@ function setGlitter(POSITION) {
 
 function moveAgent() {
     let oldPosition = agent.getPosition()
-    //check if the attempted move will actually be a bump
     let x = oldPosition[0] + agent.getDirection()[0]
     let y = oldPosition[1] + agent.getDirection()[1]
 
@@ -113,6 +112,8 @@ function processShot() {
                 agent.setScream(true)
             }
         }
+        agent.setScream(false)
+
     }
 
     else if (agent.equals(agent.getDirection(), knowledgeBase.SOUTH)) {
@@ -124,6 +125,7 @@ function processShot() {
 
             }
         }
+        agent.setScream(false)
     }
 
     else if (agent.equals(agent.getDirection(), knowledgeBase.EAST)) {
@@ -135,6 +137,7 @@ function processShot() {
 
             }
         }
+        agent.setScream(false)
     }
 
     else if (agent.equals(agent.getDirection(), knowledgeBase.EAST)) {
@@ -145,6 +148,7 @@ function processShot() {
                 agent.setScream(true)
             }
         }
+        agent.setScream(false)
     }
 }
 
