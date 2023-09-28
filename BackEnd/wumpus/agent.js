@@ -42,14 +42,12 @@ function move() {
         knowledgeBase.registerMove([position[0], position[1]]);
         processPercepts([position[0], position[1]]);
     }
-
 }
 
 function turn(direction) {
     game.turnAgent(direction);
     knowledgeBase.registerTurn(direction);
 }
-
 
 function setValueInADirection(map, position, direction, value) {
 
@@ -82,7 +80,6 @@ function setValueInADirection(map, position, direction, value) {
 
 }
 
-
 function shoot() {
     remainingArrows--;
     console.log("Agent loosed an arrow.");
@@ -98,6 +95,22 @@ function pickGold() {
     console.log("Agent picked up the gold.");
 }
 
+function existingUnvisitedAndSafeSquare(position) {
+    let directions = knowledgeBase.DIRECTIONS
+    for (let j = 0; j < directions.length; j++) {
+        let x = position[0] + directions[j][0];
+        let y = position[1] + directions[j][1];
+        //check for vaild and unvisited cell which is a neighbour of a move 
+        if (isValidPosition([x, y]) && knowledgeBase.askPath([x, y]) == 0) {
+            //check wheather it is safe or not
+            if (knowledgeBase.askWumpus([x, y]) + knowledgeBase.askPit([x, y]) <= -2) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 function lookBack(riskFactor) {
     let directions = knowledgeBase.DIRECTIONS;
     for (let i = knowledgeBase.moves().length - 1; i >= 0; i--) {
@@ -107,6 +120,7 @@ function lookBack(riskFactor) {
         for (let j = 0; j < directions.length; j++) {
             let x = position[0] + directions[j][0];
             let y = position[1] + directions[j][1];
+            //check for vaild and unvisited cell which is a neighbour of a move 
             if (isValidPosition([x, y]) && knowledgeBase.askPath([x, y]) == 0) {
                 // And it match
                 if (knowledgeBase.askWumpus([x, y]) + knowledgeBase.askPit([x, y]) <= riskFactor) {
@@ -126,7 +140,7 @@ function backtrack(moves, riskFactor) {
         return false;
     }
 
-    let cell = moves[i];
+    let cell = moves[i]; //which cell to backtrack
     console.log("backtracking to [ " + cell[0] + "," + cell[1] + " ]");
     let tempMoves = moves
     let tempTurns = knowledgeBase.turns()
@@ -153,10 +167,10 @@ function backtrack(moves, riskFactor) {
         }
         return true;
     } catch (e) {
+        console.log(e);
         return false;
     }
 }
-
 
 function WumpusloopSituation() {
     let loop = true;
@@ -184,8 +198,6 @@ function WumpusloopSituation() {
     }
 
 }
-
-
 
 function pitloopSituation() {
     let loop = true;
@@ -262,67 +274,106 @@ function loopBreak() {
 
 }
 
-
 function play() {
     if (knowledgeBase.askGlitter([position[0], position[1]])) {
         pickGold();
         return;
     }
     let riskFactor = -2;
+    let movePossible = true;
+    let forwardScore, leftScore, rightScore;
     while (true) {
         console.log("Status:\n\tCurrent position:[" + position[0] + "," + position[1] + "]\n\tCurrent direction:{" + direction[0] + "," + direction[1] + "}\n\triskFactor:" + riskFactor);
 
-        // get dangerScore for each surrounding cell
-        let forwardScore = Number.MAX_VALUE
-        let leftScore = Number.MAX_VALUE;
-        let rightScore = Number.MAX_VALUE;
-        if (equals(direction, knowledgeBase.NORTH)) {
-            if (isValidPosition([position[0], position[1] + 1]))
-                forwardScore = knowledgeBase.askWumpus([position[0], position[1] + 1]) + knowledgeBase.askPit([position[0], position[1] + 1]) + knowledgeBase.askPath([position[0], position[1] + 1]);
-            if (isValidPosition([position[0] + 1, position[1]]))
-                rightScore = knowledgeBase.askWumpus([position[0] + 1, position[1]]) + knowledgeBase.askPit([position[0] + 1, position[1]]) + knowledgeBase.askPath([position[0] + 1, position[1]]);
-            if (isValidPosition([position[0] - 1, position[1]]))
-                leftScore = knowledgeBase.askWumpus([position[0] - 1, position[1]]) + knowledgeBase.askPit([position[0] - 1, position[1]]) + knowledgeBase.askPath([position[0] - 1, position[1]]);
-        } else if (equals(direction, knowledgeBase.SOUTH)) {
-            if (isValidPosition([position[0], position[1] - 1]))
-                forwardScore = knowledgeBase.askWumpus([position[0], position[1] - 1]) + knowledgeBase.askPit([position[0], position[1] - 1]) + knowledgeBase.askPath([position[0], position[1] - 1]);
-            if (isValidPosition([position[0] - 1, position[1]]))
-                rightScore = knowledgeBase.askWumpus([position[0] - 1, position[1]]) + knowledgeBase.askPit([position[0] - 1, position[1]]) + knowledgeBase.askPath([position[0] - 1, position[1]]);
-            if (isValidPosition([position[0] + 1, position[1]]))
-                leftScore = knowledgeBase.askWumpus([position[0] + 1, position[1]]) + knowledgeBase.askPit([position[0] + 1, position[1]]) + knowledgeBase.askPath([position[0] + 1, position[1]]);
-        } else if (equals(direction, knowledgeBase.EAST)) {
-            if (isValidPosition([position[0] + 1, position[1]]))
-                forwardScore = knowledgeBase.askWumpus([position[0] + 1, position[1]]) + knowledgeBase.askPit([position[0] + 1, position[1]]) + knowledgeBase.askPath([position[0] + 1, position[1]]);
-            if (isValidPosition([position[0], position[1] - 1]))
-                rightScore = knowledgeBase.askWumpus([position[0], position[1] - 1]) + knowledgeBase.askPit([position[0], position[1] - 1]) + knowledgeBase.askPath([position[0], position[1] - 1]);
-            if (isValidPosition([position[0], position[1] + 1]))
-                leftScore = knowledgeBase.askWumpus([position[0], position[1] + 1]) + knowledgeBase.askPit([position[0], position[1] + 1]) + knowledgeBase.askPath([position[0], position[1] + 1]);
-        } else if (equals(direction, knowledgeBase.WEST)) {
-            if (isValidPosition([position[0] - 1, position[1]]))
-                forwardScore = knowledgeBase.askWumpus([position[0] - 1, position[1]]) + knowledgeBase.askPit([position[0] - 1, position[1]]) + knowledgeBase.askPath([position[0] - 1, position[1]]);
-            if (isValidPosition([position[0], position[1] + 1]))
-                rightScore = knowledgeBase.askWumpus([position[0], position[1] + 1]) + knowledgeBase.askPit([position[0], position[1] + 1]) + knowledgeBase.askPath([position[0], position[1] + 1]);
-            if (isValidPosition([position[0], position[1] - 1]))
-                leftScore = knowledgeBase.askWumpus([position[0], position[1] - 1]) + knowledgeBase.askPit([position[0], position[1] - 1]) + knowledgeBase.askPath([position[0], position[1] - 1]);
+
+
+
+        if (movePossible) {
+            // get dangerScore for each surrounding cell
+            forwardScore = Number.MAX_VALUE
+            leftScore = Number.MAX_VALUE;
+            rightScore = Number.MAX_VALUE;
+            if (equals(direction, knowledgeBase.NORTH)) {
+                if (isValidPosition([position[0], position[1] + 1]))
+                    forwardScore = knowledgeBase.askWumpus([position[0], position[1] + 1]) + knowledgeBase.askPit([position[0], position[1] + 1]) + knowledgeBase.askPath([position[0], position[1] + 1]);
+                if (isValidPosition([position[0] + 1, position[1]]))
+                    rightScore = knowledgeBase.askWumpus([position[0] + 1, position[1]]) + knowledgeBase.askPit([position[0] + 1, position[1]]) + knowledgeBase.askPath([position[0] + 1, position[1]]);
+                if (isValidPosition([position[0] - 1, position[1]]))
+                    leftScore = knowledgeBase.askWumpus([position[0] - 1, position[1]]) + knowledgeBase.askPit([position[0] - 1, position[1]]) + knowledgeBase.askPath([position[0] - 1, position[1]]);
+            } else if (equals(direction, knowledgeBase.SOUTH)) {
+                if (isValidPosition([position[0], position[1] - 1]))
+                    forwardScore = knowledgeBase.askWumpus([position[0], position[1] - 1]) + knowledgeBase.askPit([position[0], position[1] - 1]) + knowledgeBase.askPath([position[0], position[1] - 1]);
+                if (isValidPosition([position[0] - 1, position[1]]))
+                    rightScore = knowledgeBase.askWumpus([position[0] - 1, position[1]]) + knowledgeBase.askPit([position[0] - 1, position[1]]) + knowledgeBase.askPath([position[0] - 1, position[1]]);
+                if (isValidPosition([position[0] + 1, position[1]]))
+                    leftScore = knowledgeBase.askWumpus([position[0] + 1, position[1]]) + knowledgeBase.askPit([position[0] + 1, position[1]]) + knowledgeBase.askPath([position[0] + 1, position[1]]);
+            } else if (equals(direction, knowledgeBase.EAST)) {
+                if (isValidPosition([position[0] + 1, position[1]]))
+                    forwardScore = knowledgeBase.askWumpus([position[0] + 1, position[1]]) + knowledgeBase.askPit([position[0] + 1, position[1]]) + knowledgeBase.askPath([position[0] + 1, position[1]]);
+                if (isValidPosition([position[0], position[1] - 1]))
+                    rightScore = knowledgeBase.askWumpus([position[0], position[1] - 1]) + knowledgeBase.askPit([position[0], position[1] - 1]) + knowledgeBase.askPath([position[0], position[1] - 1]);
+                if (isValidPosition([position[0], position[1] + 1]))
+                    leftScore = knowledgeBase.askWumpus([position[0], position[1] + 1]) + knowledgeBase.askPit([position[0], position[1] + 1]) + knowledgeBase.askPath([position[0], position[1] + 1]);
+            } else if (equals(direction, knowledgeBase.WEST)) {
+                if (isValidPosition([position[0] - 1, position[1]]))
+                    forwardScore = knowledgeBase.askWumpus([position[0] - 1, position[1]]) + knowledgeBase.askPit([position[0] - 1, position[1]]) + knowledgeBase.askPath([position[0] - 1, position[1]]);
+                if (isValidPosition([position[0], position[1] + 1]))
+                    rightScore = knowledgeBase.askWumpus([position[0], position[1] + 1]) + knowledgeBase.askPit([position[0], position[1] + 1]) + knowledgeBase.askPath([position[0], position[1] + 1]);
+                if (isValidPosition([position[0], position[1] - 1]))
+                    leftScore = knowledgeBase.askWumpus([position[0], position[1] - 1]) + knowledgeBase.askPit([position[0], position[1] - 1]) + knowledgeBase.askPath([position[0], position[1] - 1]);
+            }
         }
 
-        console.log("\tforwardDanger:" + forwardScore + "\n\trightDanger:" + rightScore + "\n\tleftDanger:" + leftScore);
 
+
+
+
+
+        console.log("\tforwardDanger:" + forwardScore + "\n\trightDanger:" + rightScore + "\n\tleftDanger:" + leftScore);
         // if a move forward/right/left is less than the risk factor, make the move.
+
         if (forwardScore <= riskFactor && forwardScore <= leftScore && forwardScore <= rightScore) {
-            move();
-            knowledgeBase.print();
-            return;
+
+
+
+            let x = position[0] + direction[0]
+            let y = position[1] + direction[1]
+            if (knowledgeBase.askPath([x, y]) <= 0 || existingUnvisitedAndSafeSquare([x, y])) {
+                move();
+                movePossible = true
+                knowledgeBase.print();
+                return;
+            }
+            movePossible = false
+            forwardScore = Number.MAX_VALUE
+
+
         } else if (leftScore <= riskFactor && leftScore <= rightScore) {
             turn(left);
-            move();
-            knowledgeBase.print();
-            return;
+            let x = position[0] + direction[0]
+            let y = position[1] + direction[1]
+            if (knowledgeBase.askPath([x, y]) <= 0 || existingUnvisitedAndSafeSquare([x, y])) {
+                move();
+                movePossible = true
+                knowledgeBase.print();
+                return;
+            }
+            turn(right);
+            movePossible = false
+            leftScore = Number.MAX_VALUE
         } else if (rightScore <= riskFactor) {
             turn(right);
-            move();
-            knowledgeBase.print();
-            return;
+            let x = position[0] + direction[0]
+            let y = position[1] + direction[1]
+            if (knowledgeBase.askPath([x, y]) <= 0 || existingUnvisitedAndSafeSquare([x, y])) {
+                move();
+                movePossible = true
+                knowledgeBase.print();
+                return;
+            }
+            turn(right);
+            movePossible = false
+            rightScore = Number.MAX_VALUE
         } else {
             let backtracked = backtrack(knowledgeBase.moves(), riskFactor);
             if (backtracked) {
@@ -331,7 +382,7 @@ function play() {
             } else {
                 console.log("\tNo suitable backtrack found");
 
-                if (WumpusloopSituation()) {
+                if (WumpusloopSituation() || any) {
                     if (loopBreak()) {
                         return;
                     }
