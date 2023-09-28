@@ -38,13 +38,17 @@ function generateWorld(SIZE, wumpusProbablity, pitProbablity) {
     // numberOfWumpus = 2
     // world = [[4, 0, 0, 0], [0, 2, 0, 3], [0, 1, 2, 0], [0, 0, 0, 0]]
     // numberOfWumpus = 1
-    world = [[4, 0, 0, 0], [0, 2, 0, 3], [0, 0, 1, 1], [0, 0, 0, 0]]
-    numberOfWumpus = 2
-
+    // world = [[4, 0, 0, 0], [0, 2, 0, 3], [0, 0, 1, 1], [0, 0, 0, 0]]
+    // numberOfWumpus = 2
     // world = [[4, 0, 1, 0], [0, 0, 0, 0], [0, 0, 2, 0], [1, 1, 0, 3]]
     // numberOfWumpus = 3
     // world = [[4, 0, 1, 0], [0, 0, 0, 0], [1, 0, 2, 3], [0, 0, 2, 0]]
     // numberOfWumpus = 2
+
+
+
+    world = [[4, 0, 0, 2], [0, 2, 0, 1], [1, 3, 1, 0], [0, 0, 0, 0]]
+    numberOfWumpus = 3
     startingPosition = [0, 0]
     printWorld(SIZE)
 }

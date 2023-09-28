@@ -155,11 +155,11 @@ function backtrack(moves, riskFactor) {
                 move();
                 tempMoves.pop()
             } else {
-                let turn = tempTurns[tempTurns.length - 1];
-                if (turn == left) {
+                let TURN = tempTurns[tempTurns.length - 1];
+                if (TURN == left) {
                     turn(right);
                     tempTurns.pop()
-                } else if (turn == right) {
+                } else if (TURN == right) {
                     turn(left);
                     tempTurns.pop();
                 }
@@ -170,6 +170,38 @@ function backtrack(moves, riskFactor) {
         console.log(e);
         return false;
     }
+}
+
+function anyloopsituation() {
+
+    let loop = true;
+    let squares = validSquares(position)
+
+
+    let allVisited = true;
+    for (let i = 0; i < squares.length; i++) {
+        if (!knowledgeBase.alreadyVisited(squares[i])) {
+            allVisited = false;
+            break;
+        }
+    }
+
+    if (allVisited) return false
+    else {
+
+        for (let i = 0; i < squares.length; i++) {
+            // let noWumpusButPit = (knowledgeBase.askWumpus(squares[i]) == knowledgeBase.CLEAR) && (knowledgeBase.askPit(squares[i]) != knowledgeBase.CLEAR)
+            // let noPitButWumpus = (knowledgeBase.askWumpus(squares[i]) != knowledgeBase.CLEAR) && (knowledgeBase.askPit(squares[i]) == knowledgeBase.CLEAR)
+            let isWumpus = (knowledgeBase.askWumpus(squares[i]) != knowledgeBase.CLEAR)
+            let isPit = (knowledgeBase.askPit(squares[i]) != knowledgeBase.CLEAR)
+            if ((!isWumpus && !isPit) && !knowledgeBase.alreadyVisited(squares[i])) {
+                loop = false;
+                break;
+            }
+        }
+        return loop
+    }
+
 }
 
 function WumpusloopSituation() {
@@ -333,9 +365,6 @@ function play() {
         // if a move forward/right/left is less than the risk factor, make the move.
 
         if (forwardScore <= riskFactor && forwardScore <= leftScore && forwardScore <= rightScore) {
-
-
-
             let x = position[0] + direction[0]
             let y = position[1] + direction[1]
             if (knowledgeBase.askPath([x, y]) <= 0 || existingUnvisitedAndSafeSquare([x, y])) {
@@ -382,13 +411,18 @@ function play() {
             } else {
                 console.log("\tNo suitable backtrack found");
 
-                if (WumpusloopSituation() || any) {
+                if (WumpusloopSituation()) {
                     if (loopBreak()) {
                         return;
                     }
                 }
-                if (pitloopSituation()) {
+                else if (pitloopSituation()) {
                     console.log('pit loop situation');
+                }
+                else if (anyloopsituation()) {
+                    if (loopBreak()) {
+                        return;
+                    }
                 }
             }
         }
@@ -397,8 +431,6 @@ function play() {
 
 
 }
-
-
 
 
 
