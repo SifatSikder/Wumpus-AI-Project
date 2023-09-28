@@ -8,10 +8,11 @@
 
 const agent = require('./wumpus/agent')
 const game = require('./wumpus/game')
-game.createGame(4, 0.1, 0.1, agent)
-
-
+// for (let i = 0; i < 10; i++) {
+game.createGame(10, 0.2, 0.2, agent)
 agent.start(game)
+
+
 
 
 

@@ -58,7 +58,7 @@ function moveAgent() {
     if (world.world()[x][y] == 1 || world.world()[x][y] == 2) {
         score -= 1000;
         agent.setDied(true)
-        console.log('agent died.gameover+system should exit');
+        console.log('agent died');
         return
     }
     agent.setPosition([x, y])
@@ -74,28 +74,52 @@ function moveAgent() {
 function turnAgent(direction) {
     if (direction == agent.left()) {
         console.log("Agent turned left.");
-        if (agent.equals(agent.getDirection(), knowledgeBase.NORTH))
+        if (agent.equals(agent.getDirection(), knowledgeBase.NORTH)) {
+
             agent.setDirection(knowledgeBase.WEST);
-        else if (agent.equals(agent.getDirection(), knowledgeBase.EAST))
+            agent.setDirections(knowledgeBase.WEST)
+        }
+        else if (agent.equals(agent.getDirection(), knowledgeBase.EAST)) {
+
             agent.setDirection(knowledgeBase.NORTH);
-        else if (agent.equals(agent.getDirection(), knowledgeBase.SOUTH))
+            agent.setDirections(knowledgeBase.NORTH)
+        }
+        else if (agent.equals(agent.getDirection(), knowledgeBase.SOUTH)) {
+
             agent.setDirection(knowledgeBase.EAST);
-        else if (agent.equals(agent.getDirection(), knowledgeBase.WEST))
+            agent.setDirections(knowledgeBase.EAST)
+        }
+        else if (agent.equals(agent.getDirection(), knowledgeBase.WEST)) {
+
             agent.setDirection(knowledgeBase.SOUTH);
+            agent.setDirections(knowledgeBase.SOUTH)
+        }
     }
 
 
 
     if (direction == agent.right()) {
         console.log("Agent turned right.");
-        if (agent.equals(agent.getDirection(), knowledgeBase.NORTH))
+        if (agent.equals(agent.getDirection(), knowledgeBase.NORTH)) {
+
             agent.setDirection(knowledgeBase.EAST);
-        else if (agent.equals(agent.getDirection(), knowledgeBase.EAST))
+            agent.setDirections(knowledgeBase.EAST)
+        }
+        else if (agent.equals(agent.getDirection(), knowledgeBase.EAST)) {
+
             agent.setDirection(knowledgeBase.SOUTH);
-        else if (agent.equals(agent.getDirection(), knowledgeBase.SOUTH))
+            agent.setDirections(knowledgeBase.SOUTH)
+        }
+        else if (agent.equals(agent.getDirection(), knowledgeBase.SOUTH)) {
+
             agent.setDirection(knowledgeBase.WEST);
-        else if (agent.equals(agent.getDirection(), knowledgeBase.WEST))
+            agent.setDirections(knowledgeBase.WEST)
+        }
+        else if (agent.equals(agent.getDirection(), knowledgeBase.WEST)) {
+
             agent.setDirection(knowledgeBase.NORTH);
+            agent.setDirections(knowledgeBase.NORTH)
+        }
     }
     score--;
 }
@@ -183,6 +207,7 @@ module.exports = {
     processShot,
     agentGrabsGold,
     validSquares,
+    world: () => world,
     score: () => score,
     size: () => size,
 }

@@ -22,35 +22,58 @@ function initializeBoard(size) {
 
 function generateWorld(SIZE, wumpusProbablity, pitProbablity) {
     size = SIZE;
-    // numberOfWumpus = 0;
-    // world = initializeBoard(SIZE)
-    // setStartLocation()
-    // placeGold()
-    // populateWorld(wumpusProbablity, pitProbablity);
-    // printWorld(SIZE)
+    numberOfWumpus = 0;
+    world = initializeBoard(SIZE)
+    setStartLocation()
+    placeGold()
+    populateWorld(wumpusProbablity, pitProbablity);
+    printWorld(SIZE)
 
-
+    //won systems
+    // world = [[4, 0, 0, 0], [0, 2, 0, 3], [0, 0, 1, 1], [0, 0, 0, 0]]
+    // numberOfWumpus = 2
     // world = [[4, 0, 0, 1], [0, 0, 0, 0], [0, 1, 0, 3], [1, 0, 0, 0]]
     // numberOfWumpus = 3
     // world = [[4, 0, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0], [1, 1, 3, 0]]
     // numberOfWumpus = 4
-    // world = [[4, 0, 0, 0], [0, 0, 0, 0], [0, 0, 2, 1], [0, 0, 1, 3]]
-    // numberOfWumpus = 2
     // world = [[4, 0, 0, 0], [0, 2, 0, 3], [0, 1, 2, 0], [0, 0, 0, 0]]
     // numberOfWumpus = 1
-    // world = [[4, 0, 0, 0], [0, 2, 0, 3], [0, 0, 1, 1], [0, 0, 0, 0]]
+    // world = [[4, 0, 0, 1], [0, 0, 0, 3], [0, 0, 1, 0], [0, 0, 2, 0]]
+    // numberOfWumpus = 3
+
+
+
+    //Died systems
+    // world = [[4, 0, 0, 0], [0, 0, 0, 0], [0, 0, 2, 1], [0, 0, 1, 3]]
     // numberOfWumpus = 2
     // world = [[4, 0, 1, 0], [0, 0, 0, 0], [0, 0, 2, 0], [1, 1, 0, 3]]
     // numberOfWumpus = 3
     // world = [[4, 0, 1, 0], [0, 0, 0, 0], [1, 0, 2, 3], [0, 0, 2, 0]]
     // numberOfWumpus = 2
+    // world = [[4, 0, 0, 2], [0, 2, 0, 1], [1, 3, 1, 0], [0, 0, 0, 0]]
+    // numberOfWumpus = 3
 
 
+    // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    // world = [
+    //     [4, 0, 0, 2, 1, 0, 1, 1, 0, 0],
+    //     [0, 2, 0, 0, 0, 0, 1, 0, 0, 0],
+    //     [0, 0, 0, 2, 1, 0, 0, 2, 2, 0],
 
-    world = [[4, 0, 0, 2], [0, 2, 0, 1], [1, 3, 1, 0], [0, 0, 0, 0]]
-    numberOfWumpus = 3
-    startingPosition = [0, 0]
-    printWorld(SIZE)
+    //     [0, 1, 1, 1, 1, 0, 2, 1, 2, 0],
+    //     [0, 0, 0, 0, 0, 2, 1, 0, 0, 0],
+    //     [1, 0, 0, 2, 3, 2, 0, 0, 2, 0],
+
+    //     [0, 1, 0, 0, 2, 1, 2, 1, 0, 0],
+    //     [2, 0, 0, 0, 1, 0, 2, 0, 2, 0],
+
+    //     [0, 2, 1, 2, 0, 0, 0, 0, 2, 0],
+    //     [2, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+    // ]
+    // numberOfWumpus = 18
+
+    // startingPosition = [0, 0]
+    // printWorld(SIZE)
 }
 
 function setStartLocation() {
@@ -147,20 +170,21 @@ function printWorld(size) {
         for (let j = 0; j < size; j++) {
             var ch = chars[world[i][j]]
             process.stdout.write(`| ${ch} |` + ' ')
-            writeToFile(`| ${ch} |` + ' ')
+            writeToFile(`| ${ch}${world[i][j]} |` + ' ')
         }
         console.log('\n' + '-------------------------------------------------------------')
         writeToFile('\n')
-        writeToFile('-------------------------------------------------------------')
+        writeToFile('---------------------------------------------------------------------------------')
         writeToFile('\n')
     }
-    console.log('=============================================================');
-    writeToFile('=============================================================')
+    console.log('=============================================================================');
+    writeToFile('=============================================================================')
     writeToFile('\n')
 }
 
 module.exports = {
     generateWorld,
+    printWorld,
     numberOfWumpus: () => numberOfWumpus,
     startingPosition: () => startingPosition,
     world: () => world,

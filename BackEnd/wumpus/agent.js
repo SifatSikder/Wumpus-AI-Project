@@ -6,6 +6,7 @@ const right = 1
 
 var position = [];
 var direction = [];
+var directions = [];
 var stench, breeze, died, scream, glitter, haveGold, remainingArrows;
 
 function start(GAME) {
@@ -13,9 +14,10 @@ function start(GAME) {
     size = game.size()
     knowledgeBase.createKnowledgeBase(game.size(), position)
     direction = knowledgeBase.NORTH;
+    directions.push(direction);
     knowledgeBase.registerMove([position[0], position[1]]);
     while (!haveGold && !died) {
-        play();
+        play()
     }
     console.log(knowledgeBase.moves());
 }
@@ -38,6 +40,7 @@ function processPercepts(position) {
 function move() {
 
     game.moveAgent()
+    directions.push(direction)
     if (!died) {
         knowledgeBase.registerMove([position[0], position[1]]);
         processPercepts([position[0], position[1]]);
@@ -134,6 +137,15 @@ function lookBack(riskFactor) {
     return -1;
 }
 
+function turnBackward() {
+    turn(left)
+    turn(left)
+}
+
+function isTwoPositionSame(position1, position2) {
+    return position1[0] == position2[0] && position1[1] == position2[1]
+}
+
 function backtrack(moves, riskFactor) {
     let i = lookBack(riskFactor);
     if (i < 0) {
@@ -142,33 +154,26 @@ function backtrack(moves, riskFactor) {
 
     let cell = moves[i]; //which cell to backtrack
     console.log("backtracking to [ " + cell[0] + "," + cell[1] + " ]");
-    let tempMoves = moves
-    let tempTurns = knowledgeBase.turns()
-    console.log("moves.size:" + tempMoves.length + "\tturns.size:" + tempTurns.length);
-    try {
-        turn(left);
-        turn(left);
-        move();
-        while (position[0] != cell[0] || position[1] != cell[1]) {
-            let nextMove = tempMoves[tempMoves.length - 1];
-            if (position[0] + direction[0] == nextMove[0] && position[1] + direction[1] == nextMove[1]) {
-                move();
-                tempMoves.pop()
-            } else {
-                let TURN = tempTurns[tempTurns.length - 1];
-                if (TURN == left) {
-                    turn(right);
-                    tempTurns.pop()
-                } else if (TURN == right) {
-                    turn(left);
-                    tempTurns.pop();
-                }
+
+    let prevDirections = directions.slice()
+    let prevTurns = knowledgeBase.turns().slice()
+    currentDirection = prevDirections[prevDirections.length - 1]
+    turnBackward()
+    for (let i = prevDirections.length - 2; i >= 0; i--) {
+        if (isTwoPositionSame(currentDirection, prevDirections[i])) {
+            move()
+            if (died) {
+                console.log(knowledgeBase.moves());
+                process.exit(0)
             }
+            if (isTwoPositionSame(position, cell)) return true
+        } else {
+            let currentTurn = prevTurns.pop()
+            if (currentTurn == 0) {
+                turn(right)
+            } else turn(left)
         }
-        return true;
-    } catch (e) {
-        console.log(e);
-        return false;
+        currentDirection = prevDirections[i]
     }
 }
 
@@ -287,17 +292,21 @@ function loopBreak() {
 
     if (row == 0 && col == 1) {
         direction = knowledgeBase.NORTH
+        directions.push(direction);
     }
     else if (row == 0 && col == -1) {
         direction = knowledgeBase.SOUTH
+        directions.push(direction);
     }
 
     else if (row == 1 && col == 0) {
         direction = knowledgeBase.EAST
+        directions.push(direction);
     }
 
     else if (row == -1 && col == 0) {
         direction = knowledgeBase.WEST
+        directions.push(direction);
     }
 
 
@@ -323,8 +332,8 @@ function play() {
         if (movePossible) {
             // get dangerScore for each surrounding cell
             forwardScore = Number.MAX_VALUE
-            leftScore = Number.MAX_VALUE;
-            rightScore = Number.MAX_VALUE;
+            leftScore = Number.MAX_VALUE
+            rightScore = Number.MAX_VALUE
             if (equals(direction, knowledgeBase.NORTH)) {
                 if (isValidPosition([position[0], position[1] + 1]))
                     forwardScore = knowledgeBase.askWumpus([position[0], position[1] + 1]) + knowledgeBase.askPit([position[0], position[1] + 1]) + knowledgeBase.askPath([position[0], position[1] + 1]);
@@ -364,11 +373,28 @@ function play() {
         console.log("\tforwardDanger:" + forwardScore + "\n\trightDanger:" + rightScore + "\n\tleftDanger:" + leftScore);
         // if a move forward/right/left is less than the risk factor, make the move.
 
+        // if (forwardScore == Number.MAX_VALUE && leftScore == Number.MAX_VALUE && rightScore == Number.MAX_VALUE) {
+        //     console.log('Code is here');
+        //     let randomMove = Math.floor(Math.random() * 3) + 1
+        //     if (randomMove == 2) {
+        //         turn(left)
+        //     }
+        //     if (randomMove == 3) {
+        //         turn(right)
+        //     }
+        //     move();
+        //     movePossible = true
+        //     knowledgeBase.print();
+        //     return;
+        // }
+
+
         if (forwardScore <= riskFactor && forwardScore <= leftScore && forwardScore <= rightScore) {
             let x = position[0] + direction[0]
             let y = position[1] + direction[1]
             if (knowledgeBase.askPath([x, y]) <= 0 || existingUnvisitedAndSafeSquare([x, y])) {
                 move();
+
                 movePossible = true
                 knowledgeBase.print();
                 return;
@@ -400,7 +426,7 @@ function play() {
                 knowledgeBase.print();
                 return;
             }
-            turn(right);
+            turn(left);
             movePossible = false
             rightScore = Number.MAX_VALUE
         } else {
@@ -486,6 +512,7 @@ module.exports = {
 
     setPosition: (value) => position = value,
     setDirection: (value) => direction = value,
+    setDirections: (value) => directions.push(value),
     setStench: (value) => stench = value,
     setBreeze: (value) => breeze = value,
     setGlitter: (value) => glitter = value,
