@@ -11,6 +11,7 @@ function createGame(SIZE, wumpusProbablity, pitProbablity, AGENT) {
     world.generateWorld(size, wumpusProbablity, pitProbablity);
     agent.setPosition(world.startingPosition())
     agent.setRemainingArrows(world.numberOfWumpus())
+    return world.world()
 }
 
 

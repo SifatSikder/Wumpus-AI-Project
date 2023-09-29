@@ -16,13 +16,13 @@ app.listen(PORT, () => { console.log(`Server is running at port ${PORT}`) })
 
 
 //required files fetching
-const game = require('./wumpusAI');
+const agent = require('./wumpus/agent')
+const game = require('./wumpus/game')
 
 
-// app.post('/playerOrder', (req, res) => {
-//   const { choice } = req.body;
-//   res.status(200).json(gomuko.initiate(choice));
-// })
+app.get('/generate', (req, res) => {
+    res.status(200).json(game.createGame(10, 0.2, 0.2, agent));
+})
 
 // app.get('/flush', (req, res) => {
 //   var board = gomuko.flushBoard()
