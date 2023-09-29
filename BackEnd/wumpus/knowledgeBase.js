@@ -246,8 +246,26 @@ function print() {
         process.stdout.write(" " + i);
     }
     console.log();
-    console.log(result);
+    // console.log(result);
 }
+
+
+function printMap(map) {
+
+
+    console.log('This is wumpus MAP');
+    for (let i = 0; i < map.length; i++) {
+        for (let j = 0; j < map[0].length; j++) {
+            if (map[i][j] == -1) process.stdout.write(`- `)
+            else process.stdout.write(`${map[i][j]} `)
+        }
+        console.log();
+    }
+}
+
+
+
+
 
 module.exports = {
     createKnowledgeBase,
@@ -266,6 +284,7 @@ module.exports = {
     tellScream,
     print,
     alreadyVisited,
+    printMap,
 
     moves: () => moves,
     turns: () => turns,
@@ -277,22 +296,3 @@ module.exports = {
     pitMap: () => pitMap,
     EAST, WEST, NORTH, SOUTH, DIRECTIONS, CLEAR
 }
-
-
-// createKnowledgeBase(4)
-// registerMove([0, 0])
-// registerMove([1, 0])
-// tellClear([1, 0]);
-// registerMove([2, 0]);
-// tellStench([2, 0]);
-// tellClear([0, 0]);
-// tellClear([0, 1]);
-// tellStench([0, 2]);
-// tellClear([0, 1]);
-// tellClear([0, 0]);
-// tellClear([1, 0]);
-// tellClear([2, 0]);
-// tellBreeze([3, 0]);
-// tellClear([3, 1]);
-// tellStench([3, 2]);
-// print();

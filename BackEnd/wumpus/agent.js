@@ -420,6 +420,9 @@ function play() {
 
                 movePossible = true
                 knowledgeBase.print();
+                knowledgeBase.printMap(knowledgeBase.wumpusMap());
+                knowledgeBase.printMap(knowledgeBase.pitMap());
+                knowledgeBase.printMap(knowledgeBase.pathMap());
                 return;
             }
             movePossible = false
@@ -434,6 +437,9 @@ function play() {
                 move();
                 movePossible = true
                 knowledgeBase.print();
+                knowledgeBase.printMap(knowledgeBase.wumpusMap());
+                knowledgeBase.printMap(knowledgeBase.pitMap());
+                knowledgeBase.printMap(knowledgeBase.pathMap());
                 return;
             }
             turn(right);
@@ -447,6 +453,9 @@ function play() {
                 move();
                 movePossible = true
                 knowledgeBase.print();
+                knowledgeBase.printMap(knowledgeBase.wumpusMap());
+                knowledgeBase.printMap(knowledgeBase.pitMap());
+                knowledgeBase.printMap(knowledgeBase.pathMap());
                 return;
             }
             turn(left);
