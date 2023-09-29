@@ -9,6 +9,26 @@ var direction = [];
 var directions = [];
 var stench, breeze, died, scream, glitter, haveGold, remainingArrows;
 
+function sendInfo() {
+    return {
+        pathMap: knowledgeBase.pathMap(),
+        wumpusMap: knowledgeBase.wumpusMap(),
+        pitMap: knowledgeBase.pitMap(),
+        moves: knowledgeBase.moves(),
+        turns: knowledgeBase.turns(),
+        gliterPosition: knowledgeBase.gliterPosition(),
+        currentPosition: position,
+        currentDirection: direction,
+        breeze: breeze,
+        stench: stench,
+        glitter: glitter,
+        scream: scream,
+        remainingArrows: remainingArrows,
+        died: died,
+        haveGold: haveGold
+    }
+}
+
 function start(GAME) {
     game = GAME
     size = game.size()
@@ -16,10 +36,13 @@ function start(GAME) {
     direction = knowledgeBase.NORTH;
     directions.push(direction);
     knowledgeBase.registerMove([position[0], position[1]]);
-    while (!haveGold && !died) {
-        play()
-    }
-    console.log(knowledgeBase.moves());
+    stench = false;
+    breeze = false;
+    glitter = false;
+    haveGold = false;
+    died = false;
+    scream = false;
+    directions = [];
 }
 
 function processPercepts(position) {
@@ -459,11 +482,6 @@ function play() {
 }
 
 
-
-
-
-
-
 function equals(array1, array2) {
     if (array1.length == array2.length) {
         for (let i = 0; i < array1.length; i++) {
@@ -492,15 +510,21 @@ function validSquares(position) {
     return results
 }
 
+
+
+
 module.exports = {
 
     equals,
     start,
+    sendInfo,
+    play,
 
     left: () => left,
     right: () => right,
 
     getPosition: () => position,
+    getHaveGold: () => haveGold,
     getDirection: () => direction,
     getStench: () => stench,
     getBreeze: () => breeze,
@@ -517,6 +541,7 @@ module.exports = {
     setBreeze: (value) => breeze = value,
     setGlitter: (value) => glitter = value,
     setDied: (value) => died = value,
+    setHaveGold: (value) => haveGold = value,
     setScream: (value) => scream = value,
     setRemainingArrows: (value) => remainingArrows = value,
 }

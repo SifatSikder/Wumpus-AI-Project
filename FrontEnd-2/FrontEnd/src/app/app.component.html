@@ -4,14 +4,128 @@
     GitHub Repository
   </a>
   <nav style="margin-top: 0.5rem;">
-    <a routerLink="generate" routerLinkActive="active">Generate Board</a>
+    <button (click)="generateBoard()">Generate Board</button>
     <div style="width: 1rem; display: inline-block;"></div>
 
-    <a routerLink="generate">Upload Board from CSV</a>
+    <button (click)="uploadFromCsv()">Upload Board from CSV</button>
     <div style="width: 1rem; display: inline-block;"></div>
 
+    <button (click)="play()">Play</button>
+    <div style="width: 1rem; display: inline-block;"></div>
   </nav>
 </div>
-<div style="margin:0; max-width:500px;">
-  <router-outlet></router-outlet>
+
+
+<div style="margin-top:1%;" *ngIf="boardGenerated">
+  <div class="container-wrapper">
+    <div class="container">
+      <h2>Generated Board</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>North</th>
+          <th></th>
+        </tr>
+        <tr>
+          <th>West</th>
+          <td>
+            <table class="matrix-grid">
+              <tr *ngFor="let row of actualBoard; let i = index">
+                <td *ngFor="let cell of row; let j = index" class="matrix-cell">
+                  {{actualBoard[i][j]}}
+                </td>
+              </tr>
+            </table>
+          </td>
+          <th>East</th>
+        </tr>
+        <tr>
+          <th></th>
+          <th>South</th>
+          <th></th>
+        </tr>
+      </table>
+    </div>
+
+    <div class="container">
+      <h2>Agent View</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th>North</th>
+          <th></th>
+        </tr>
+        <tr>
+          <th>West</th>
+          <td>
+            <table class="matrix-grid">
+              <tr *ngFor="let row of actualBoard; let i = index">
+                <td *ngFor="let cell of row; let j = index" class="matrix-cell">
+                  {{agentViewBoard[i][j]}}
+                </td>
+              </tr>
+            </table>
+          </td>
+          <th>East</th>
+        </tr>
+        <tr>
+          <th></th>
+          <th>South</th>
+          <th></th>
+        </tr>
+      </table>
+    </div>
+
+    <div class="container">
+      <h2>Status</h2>
+      <table class="matrix-grid">
+        <tr>
+          <td class="matrix-cell">Current Position </td>
+          <td class="matrix-cell">{{currentPosition}}</td>
+        </tr>
+        <tr>
+          <td class="matrix-cell">Current Direction</td>
+          <td class="matrix-cell">{{getDirection()}}</td>
+        </tr>
+        <tr>
+          <td class="matrix-cell">Died</td>
+          <td class="matrix-cell">{{died}}</td>
+        </tr>
+        <tr>
+          <td class="matrix-cell">Move Stack</td>
+          <td class="matrix-cell">{{moves}}</td>
+        </tr>
+        <tr>
+          <td class="matrix-cell">Stench</td>
+          <td class="matrix-cell">{{stench}}</td>
+        </tr>
+        <tr>
+          <td class="matrix-cell">breeze</td>
+          <td class="matrix-cell">{{breeze}}</td>
+        </tr>
+        <tr>
+          <td class="matrix-cell">remainingArrows</td>
+          <td class="matrix-cell">{{remainingArrows}}</td>
+        </tr>
+        <tr>
+          <td class="matrix-cell">scream</td>
+          <td class="matrix-cell">{{scream}}</td>
+        </tr>
+        <tr>
+          <td class="matrix-cell">gliterPosition</td>
+          <td class="matrix-cell">{{gliterPosition}}</td>
+        </tr>
+        <tr>
+          <td class="matrix-cell">haveGold</td>
+          <td class="matrix-cell">{{haveGold}}</td>
+        </tr>
+      </table>
+
+      <!-- {{glitter}}
+      {{pathMap}}
+      {{pitMap}}
+      {{wumpusMap}} -->
+    </div>
+
+  </div>
 </div>

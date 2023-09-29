@@ -31,6 +31,9 @@ function createKnowledgeBase(size, position) {
     wumpusMap = initializeBoard(size)
     pitMap = initializeBoard(size)
     tellClear(position)
+    moves = []
+    turns = []
+    gliterPosition = []
 }
 
 function registerMove(move) {
