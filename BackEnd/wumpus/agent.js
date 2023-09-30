@@ -338,6 +338,26 @@ function loopBreak() {
 
 }
 
+
+function printBacktrackPossible(riskFactor) {
+    let moves = knowledgeBase.moves()
+    for (let i = 0; i < moves.length; i++) {
+        let squares = validSquares(moves[i])
+
+        let possible = false;
+        for (let j = 0; j < squares.length; j++) {
+            if (knowledgeBase.askPath(squares[j]) == 0 && knowledgeBase.askPit(squares[j]) + knowledgeBase.askWumpus(squares[j]) <= riskFactor) {
+
+                console.log(`[${moves[i]}]:Possible ==> [${squares[j]}]`);
+                possible = true
+                break;
+            }
+        }
+        if (!possible) console.log(`[${moves[i]}]:Not Possible`);
+    }
+}
+
+
 function play() {
     if (knowledgeBase.askGlitter([position[0], position[1]])) {
         pickGold();
@@ -388,29 +408,32 @@ function play() {
             }
         }
 
-
-
-
-
-
         console.log("\tforwardDanger:" + forwardScore + "\n\trightDanger:" + rightScore + "\n\tleftDanger:" + leftScore);
         // if a move forward/right/left is less than the risk factor, make the move.
 
-        // if (forwardScore == Number.MAX_VALUE && leftScore == Number.MAX_VALUE && rightScore == Number.MAX_VALUE) {
-        //     console.log('Code is here');
-        //     let randomMove = Math.floor(Math.random() * 3) + 1
-        //     if (randomMove == 2) {
-        //         turn(left)
-        //     }
-        //     if (randomMove == 3) {
-        //         turn(right)
-        //     }
-        //     move();
-        //     movePossible = true
-        //     knowledgeBase.print();
-        //     return;
-        // }
+        if (forwardScore == Number.MAX_VALUE && leftScore == Number.MAX_VALUE && rightScore == Number.MAX_VALUE) {
+            console.log('Code is here');
+            // let randomMove = Math.floor(Math.random() * 3) + 1
+            // if (randomMove == 2) {
+            //     turn(left)
+            // }
+            // if (randomMove == 3) {
+            //     turn(right)
+            // }
+            move();
 
+            movePossible = true
+            knowledgeBase.print();
+            printBacktrackPossible(riskFactor)
+            console.log(riskFactor);
+            console.log('Wumpus Map');
+            knowledgeBase.printMap(knowledgeBase.wumpusMap());
+            console.log('Pit Map');
+            knowledgeBase.printMap(knowledgeBase.pitMap());
+            console.log('Path Map');
+            knowledgeBase.printMap(knowledgeBase.pathMap());
+            return;
+        }
 
         if (forwardScore <= riskFactor && forwardScore <= leftScore && forwardScore <= rightScore) {
             let x = position[0] + direction[0]
@@ -420,8 +443,13 @@ function play() {
 
                 movePossible = true
                 knowledgeBase.print();
+                printBacktrackPossible(riskFactor)
+                console.log(riskFactor);
+                console.log('Wumpus Map');
                 knowledgeBase.printMap(knowledgeBase.wumpusMap());
+                console.log('Pit Map');
                 knowledgeBase.printMap(knowledgeBase.pitMap());
+                console.log('Path Map');
                 knowledgeBase.printMap(knowledgeBase.pathMap());
                 return;
             }
@@ -437,8 +465,13 @@ function play() {
                 move();
                 movePossible = true
                 knowledgeBase.print();
+                printBacktrackPossible(riskFactor)
+                console.log(riskFactor);
+                console.log('Wumpus Map');
                 knowledgeBase.printMap(knowledgeBase.wumpusMap());
+                console.log('Pit Map');
                 knowledgeBase.printMap(knowledgeBase.pitMap());
+                console.log('Path Map');
                 knowledgeBase.printMap(knowledgeBase.pathMap());
                 return;
             }
@@ -453,8 +486,13 @@ function play() {
                 move();
                 movePossible = true
                 knowledgeBase.print();
+                printBacktrackPossible(riskFactor)
+                console.log(riskFactor);
+                console.log('Wumpus Map');
                 knowledgeBase.printMap(knowledgeBase.wumpusMap());
+                console.log('Pit Map');
                 knowledgeBase.printMap(knowledgeBase.pitMap());
+                console.log('Path Map');
                 knowledgeBase.printMap(knowledgeBase.pathMap());
                 return;
             }
@@ -489,7 +527,6 @@ function play() {
 
 
 }
-
 
 function equals(array1, array2) {
     if (array1.length == array2.length) {

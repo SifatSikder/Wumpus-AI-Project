@@ -251,10 +251,8 @@ function print() {
 
 
 function printMap(map) {
-
-
-    console.log('This is wumpus MAP');
     for (let i = 0; i < map.length; i++) {
+        process.stdout.write(`${i}| `)
         for (let j = 0; j < map[0].length; j++) {
             if (map[i][j] == -1) process.stdout.write(`- `)
             else process.stdout.write(`${map[i][j]} `)

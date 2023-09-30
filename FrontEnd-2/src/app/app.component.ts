@@ -41,8 +41,59 @@ export class AppComponent {
   //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   // ]
 
+  selectedCsvFile: File | null = null;
+  onFileSelected(event: any) {
+    this.selectedCsvFile = event.target.files[0];
+  }
+
   uploadFromCsv() {
-    throw new Error('Method not implemented.');
+    if (!this.selectedCsvFile) {
+      console.error("No file selected");
+      return;
+    }
+
+    console.log('File selected:', this.selectedCsvFile.name);
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+
+      const csvData: string = e.target.result;
+      const rows: string[] = csvData.split('\n');
+
+      for (const row of rows) {
+        const rowData: string[] = row.split(',');
+        const boardRow: number[] = [];
+
+        for (const value of rowData) {
+          if (value === 'P')
+            boardRow.push(2); // Pit
+          else if (value === 'W')
+            boardRow.push(1); // Wumpus
+          else if (value === 'G')
+            boardRow.push(3); // Gold
+          else if (value === '-')
+            boardRow.push(0); // Empty
+          else if (value === 'A')
+            boardRow.push(4); // Agent
+          else
+            boardRow.push(0);
+
+        }
+        this.actualBoard.push(boardRow);
+      }
+      console.log('Parsed Wumpus Board:', this.actualBoard);
+      console.log(this.actualBoard);
+    };
+
+    reader.onerror = (e: any) => {
+      console.error('Error reading the file:', e.target.error);
+    };
+
+    // Read the selected CSV file as text
+    reader.readAsText(this.selectedCsvFile);
+
+    this.generateBoard();
+
   }
 
   title = 'WUMPUS---AI';
