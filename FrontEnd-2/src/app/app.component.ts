@@ -11,6 +11,7 @@ export class AppComponent {
   constructor(private http: HttpClient) { }
   selectedCsvFile: File | null = null;
 
+
   title = 'WUMPUS---AI';
   actualBoard: any[][] = [];
   agentViewBoard: any[][] = [];
@@ -20,6 +21,7 @@ export class AppComponent {
   previousDirection: any
   currentDirection: any;
   currentPosition: any;
+  currentMoves: any;
   pathMap: any;
   pitMap: any;
   wumpusMap: any;
@@ -34,11 +36,12 @@ export class AppComponent {
   remainingArrows: any;
   directionString: String = 'NORTH';
 
-  updateAgentsViewBoard(response: any): void {
-    console.log(response);
+
+  async updateAgentsViewBoard(response: any): Promise<void> {
 
     this.currentDirection = response.currentDirection;
     this.currentPosition = response.currentPosition;
+    this.currentMoves = response.currentMoves
     this.pathMap = response.pathMap;
     this.pitMap = response.pitMap;
     this.wumpusMap = response.wumpusMap;
@@ -51,6 +54,24 @@ export class AppComponent {
     this.glitter = response.glitter
     this.haveGold = response.haveGold
     this.remainingArrows = response.remainingArrows
+    const sleep = (ms: number | undefined) => new Promise(r => setTimeout(r, ms));
+
+    console.log(this.currentMoves);
+
+    if (this.currentMoves != undefined && this.currentMoves.length > 1) {
+      for (let i = 0; i < this.currentMoves.length; i++) {
+        let x = this.currentMoves[i][0];
+        let y = this.currentMoves[i][1];
+        await sleep(1000);
+        this.agentViewBoard[x][y] += ' A'
+        this.actualBoard[this.previousDirection[0]][this.previousDirection[1]] = ''
+        this.actualBoard[x][y] = 'A'
+        this.previousDirection = [x, y]
+      }
+    }
+
+
+
 
 
     let x = this.currentPosition[0]
@@ -58,10 +79,7 @@ export class AppComponent {
     for (let i = 0; i < this.pathMap.length; i++) {
       this.agentViewBoard[i] = [];
       for (let j = 0; j < this.pathMap[0].length; j++) {
-        if (this.pathMap[i][j] == 0 && this.pitMap[i][j] == 0 && this.wumpusMap[i][j] == 0) {
-          this.agentViewBoard[i][j] = '?'
-        }
-        else if (this.pitMap[i][j] == -1 && this.wumpusMap[i][j] == -1) {
+        if (this.pitMap[i][j] == -1 && this.wumpusMap[i][j] == -1) {
           this.agentViewBoard[i][j] = 'OK'
         }
         else if (this.pitMap[i][j] >= 1 && this.wumpusMap[i][j] >= 1) {
@@ -73,12 +91,16 @@ export class AppComponent {
         else if (this.wumpusMap[i][j] >= 1 && this.pitMap[i][j] <= 0) {
           this.agentViewBoard[i][j] = '?W'
         }
+        else this.agentViewBoard[i][j] = '?'
         if (i == x && j == y) {
           this.agentViewBoard[x][y] += ' A'
 
           this.actualBoard[this.previousDirection[0]][this.previousDirection[1]] = ''
           this.actualBoard[x][y] = 'A'
           this.previousDirection = [x, y]
+        }
+        if (response.board[i][j] == -1) {
+          this.actualBoard[i][j] = 'DW'
         }
       }
     }
@@ -156,6 +178,8 @@ export class AppComponent {
 
   play() {
     this.http.get<any>(`${this.BASE_URL}/play`).subscribe(response => {
+      console.log(response.currentMoves);
+
       this.updateAgentsViewBoard(response);
       this.directionString = this.getDirection();
       if (response.died) alert('Agent Died')
@@ -164,6 +188,36 @@ export class AppComponent {
       console.log('This is the agent\'s view board.');
       console.log(this.agentViewBoard);
     });
+  }
+
+
+
+  async autoplay() {
+    const sleep = (ms: number | undefined) => new Promise(r => setTimeout(r, ms));
+    let died = false;
+    let haveGold = false;
+    while (true) {
+      await sleep(2000);
+
+      this.http.get<any>(`${this.BASE_URL}/play`).subscribe(response => {
+        console.log(response.currentMoves);
+
+        this.updateAgentsViewBoard(response);
+        this.directionString = this.getDirection();
+        if (response.died) {
+          died = true;
+        }
+        if (response.haveGold) {
+          haveGold = true;
+        }
+
+        console.log('This is the agent\'s view board.');
+        console.log(this.agentViewBoard);
+      });
+      if (died || haveGold) break
+    }
+    if (died) alert('Agent Died')
+    if (haveGold) alert('Agent Won!!!')
   }
 
   getDirection(): String {

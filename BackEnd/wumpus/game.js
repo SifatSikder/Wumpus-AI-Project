@@ -144,7 +144,7 @@ function processShot() {
     if (agent.equals(agent.getDirection(), knowledgeBase.NORTH)) {
         for (let col = COL; col < world.world().length; col++) {
             if (world.world()[ROW][col] == 1) {
-                world.setSquare([ROW, col], 0)
+                world.setSquare([ROW, col], -1)
                 agent.setScream(true)
             }
         }
@@ -156,7 +156,7 @@ function processShot() {
 
         for (let col = COL; col >= 0; col--) {
             if (world.world()[ROW][COL] == 1) {
-                world.setSquare([ROW, col], 0)
+                world.setSquare([ROW, col], -1)
                 agent.setScream(true)
 
             }
@@ -168,7 +168,7 @@ function processShot() {
 
         for (let row = ROW; row < world.world().length; row++) {
             if (world.world()[row][COL] == 1) {
-                world.setSquare([row, COL], 0)
+                world.setSquare([row, COL], -1)
                 agent.setScream(true)
 
             }
@@ -180,7 +180,7 @@ function processShot() {
 
         for (let row = ROW; row >= 0; row--) {
             if (world.world()[row][COL] == 1) {
-                world.setSquare([row, COL], 0)
+                world.setSquare([row, COL], -1)
                 agent.setScream(true)
             }
         }
@@ -190,7 +190,7 @@ function processShot() {
 
 function agentGrabsGold() {
     if (world.world()[agent.getPosition()[0]][agent.getPosition()[1]] == 3) {
-        world.world()[agent.getPosition()[0]][agent.getPosition()[1]] = 0;
+        world.world()[agent.getPosition()[0]][agent.getPosition()[1]] = -3;
         console.log('Agent won');
         score += 1000;
     }

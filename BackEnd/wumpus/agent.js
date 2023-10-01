@@ -1,4 +1,5 @@
-const knowledgeBase = require('./knowledgeBase')
+const knowledgeBase = require('./knowledgeBase');
+const world = require('./world');
 var game;
 var size;
 const left = 0
@@ -7,6 +8,7 @@ const right = 1
 var position = [];
 var direction = [];
 var directions = [];
+var currentMoves;
 var stench, breeze, died, scream, glitter, haveGold, remainingArrows;
 
 function sendInfo() {
@@ -26,7 +28,9 @@ function sendInfo() {
         scream: scream,
         remainingArrows: remainingArrows,
         died: died,
-        haveGold: haveGold
+        haveGold: haveGold,
+        board: world.world(),
+        currentMoves: currentMoves
     }
 }
 
@@ -44,6 +48,7 @@ function start(GAME) {
     died = false;
     scream = false;
     directions = [];
+    currentMoves = []
 }
 
 function processPercepts(position) {
@@ -170,7 +175,7 @@ function isTwoPositionSame(position1, position2) {
     return position1[0] == position2[0] && position1[1] == position2[1]
 }
 
-function backtrack(moves, riskFactor) {
+function backtrack(moves, riskFactor, currentMoves) {
     let i = lookBack(riskFactor);
     if (i < 0) {
         return false;
@@ -186,9 +191,10 @@ function backtrack(moves, riskFactor) {
     for (let i = prevDirections.length - 2; i >= 0; i--) {
         if (isTwoPositionSame(currentDirection, prevDirections[i])) {
             move()
+            currentMoves.push(position)
             if (died) {
                 console.log(knowledgeBase.moves());
-                process.exit(0)
+                return
             }
             if (isTwoPositionSame(position, cell)) return true
         } else {
@@ -400,12 +406,14 @@ function printBacktrackPossible(riskFactor) {
 
 function play() {
     if (knowledgeBase.askGlitter([position[0], position[1]])) {
+        console.log('aise');
         pickGold();
         return;
     }
     let riskFactor = -2;
     let movePossible = true;
     let forwardScore, leftScore, rightScore;
+    currentMoves = [];
     while (true) {
         console.log("Status:\n\tCurrent position:[" + position[0] + "," + position[1] + "]\n\tCurrent direction:{" + direction[0] + "," + direction[1] + "}\n\triskFactor:" + riskFactor);
 
@@ -452,7 +460,7 @@ function play() {
         // if a move forward/right/left is less than the risk factor, make the move.
 
         if (forwardScore == Number.MAX_VALUE && leftScore == Number.MAX_VALUE && rightScore == Number.MAX_VALUE) {
-            console.log('Code is here');
+
             // let randomMove = Math.floor(Math.random() * 3) + 1
             // if (randomMove == 2) {
             //     turn(left)
@@ -461,6 +469,7 @@ function play() {
             //     turn(right)
             // }
             move();
+            currentMoves.push(position)
 
             movePossible = true
             knowledgeBase.print();
@@ -480,6 +489,7 @@ function play() {
             let y = position[1] + direction[1]
             if (knowledgeBase.askPath([x, y]) <= 0 || existingUnvisitedAndSafeSquare([x, y])) {
                 move();
+                currentMoves.push(position)
 
                 movePossible = true
                 knowledgeBase.print();
@@ -503,6 +513,7 @@ function play() {
             let y = position[1] + direction[1]
             if (knowledgeBase.askPath([x, y]) <= 0 || existingUnvisitedAndSafeSquare([x, y])) {
                 move();
+                currentMoves.push(position)
                 movePossible = true
                 knowledgeBase.print();
                 printBacktrackPossible(riskFactor)
@@ -524,6 +535,7 @@ function play() {
             let y = position[1] + direction[1]
             if (knowledgeBase.askPath([x, y]) <= 0 || existingUnvisitedAndSafeSquare([x, y])) {
                 move();
+                currentMoves.push(position)
                 movePossible = true
                 knowledgeBase.print();
                 printBacktrackPossible(riskFactor)
@@ -540,10 +552,11 @@ function play() {
             movePossible = false
             rightScore = Number.MAX_VALUE
         } else {
-            let backtracked = backtrack(knowledgeBase.moves(), riskFactor);
+            let backtracked = backtrack(knowledgeBase.moves(), riskFactor, currentMoves);
             if (backtracked) {
                 console.log("\tbacktracked");
-                return;
+                console.log(currentMoves);
+                return currentMoves;
             } else {
                 console.log("\tNo suitable backtrack found");
 

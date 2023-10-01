@@ -22,6 +22,9 @@
 
       <button (click)="play()">Play</button>
       <div style="width: 1rem; display: inline-block;"></div>
+
+      <button (click)="autoplay()">Autoplay</button>
+      <div style="width: 1rem; display: inline-block;"></div>
     </nav>
   </div>
 
@@ -40,9 +43,9 @@
             <th>⬅S</th>
             <td>
               <table class="matrix-grid">
-                <tr *ngFor="let row of actualBoard; let i = index">
+                <tr *ngFor="let row of actualBoard.reverse(); let i = index">
                   <td *ngFor="let cell of row; let j = index" class="matrix-cell">
-                    <!-- {{actualBoard[i][j]}} -->
+                    {{actualBoard[i][j]}}
                     <img *ngIf="actualBoard[i][j] === 'A'" src="assets/agent.png" alt="A"
                       class="resizable-image transparent-image">
 
@@ -53,6 +56,8 @@
                       class="resizable-image transparent-image">
 
                     <img *ngIf="actualBoard[i][j] === 'G'" src="assets/gold-2.png" alt="G"
+                      class="resizable-image transparent-image">
+                    <img *ngIf="actualBoard[i][j] === 'DW' " src="assets/deadwumpus.jpg" alt="DW"
                       class="resizable-image transparent-image">
                   </td>
                 </tr>
@@ -80,7 +85,7 @@
             <th>⬅S</th>
             <td>
               <table class="matrix-grid">
-                <tr *ngFor="let row of actualBoard; let i = index">
+                <tr *ngFor="let row of agentViewBoard.reverse(); let i = index">
                   <td *ngFor="let cell of row; let j = index" class="matrix-cell">
                     {{agentViewBoard[i][j]}}
 
@@ -124,10 +129,10 @@
             <td class="matrix-cell">Died</td>
             <td class="matrix-cell">{{died}}</td>
           </tr>
-          <tr>
+          <!-- <tr>
             <td class="matrix-cell">Move Stack</td>
             <td class="matrix-cell">{{moves}}</td>
-          </tr>
+          </tr> -->
           <tr>
             <td class="matrix-cell">Stench</td>
             <td class="matrix-cell">{{stench}}</td>
