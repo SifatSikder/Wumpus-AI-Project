@@ -156,13 +156,6 @@ function populateWorld(wumpusProbablity, pitProbablity) {
 
 }
 
-
-
-
-
-
-
-
 function isSquareEmpty(i, j) {
     return world[i][j] == 0
 }
@@ -232,14 +225,3 @@ module.exports = {
     world: () => world,
     setSquare: (position, value) => world[position[0]][position[1]] = value
 }
-
-
-// generateWorld(4, 0.1, 0.1)
-
-
-// generateWorld(4, 0.1, 0.1)
-
-
-// console.log(world);
-// console.log();
-

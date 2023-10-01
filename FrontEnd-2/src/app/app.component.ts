@@ -17,6 +17,7 @@ export class AppComponent {
   BASE_URL = 'http://localhost:8080';
   gameStarted: boolean = false;
   boardGenerated: boolean = false;
+  previousDirection: any
   currentDirection: any;
   currentPosition: any;
   pathMap: any;
@@ -74,6 +75,10 @@ export class AppComponent {
         }
         if (i == x && j == y) {
           this.agentViewBoard[x][y] += ' A'
+
+          this.actualBoard[this.previousDirection[0]][this.previousDirection[1]] = ''
+          this.actualBoard[x][y] = 'A'
+          this.previousDirection = [x, y]
         }
       }
     }
@@ -111,6 +116,7 @@ export class AppComponent {
         else if (board[i][j] == 4) {
           this.actualBoard[i][j] = 'A'
           this.agentViewBoard[i][j] = 'A'
+          this.previousDirection = [i, j]
         }
       }
     }
