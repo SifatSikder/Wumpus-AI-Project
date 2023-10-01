@@ -461,6 +461,7 @@ function play() {
 
         if (forwardScore == Number.MAX_VALUE && leftScore == Number.MAX_VALUE && rightScore == Number.MAX_VALUE) {
 
+            let valid_squares = validSquares(position)
             // let randomMove = Math.floor(Math.random() * 3) + 1
             // if (randomMove == 2) {
             //     turn(left)

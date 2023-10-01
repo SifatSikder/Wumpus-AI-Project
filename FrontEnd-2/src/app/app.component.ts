@@ -62,7 +62,7 @@ export class AppComponent {
       for (let i = 0; i < this.currentMoves.length; i++) {
         let x = this.currentMoves[i][0];
         let y = this.currentMoves[i][1];
-        await sleep(1000);
+        await sleep(200);
         this.agentViewBoard[x][y] += ' A'
         this.actualBoard[this.previousDirection[0]][this.previousDirection[1]] = ''
         this.actualBoard[x][y] = 'A'
@@ -197,7 +197,7 @@ export class AppComponent {
     let died = false;
     let haveGold = false;
     while (true) {
-      await sleep(2000);
+      await sleep(1000);
 
       this.http.get<any>(`${this.BASE_URL}/play`).subscribe(response => {
         console.log(response.currentMoves);
@@ -216,8 +216,20 @@ export class AppComponent {
       });
       if (died || haveGold) break
     }
-    if (died) alert('Agent Died')
-    if (haveGold) alert('Agent Won!!!')
+    if (died) {
+      let x = this.currentPosition[0] + this.currentDirection[0]
+      let y = this.currentPosition[1] + this.currentDirection[1]
+      this.actualBoard[x][y] += ' A'
+      await sleep(200)
+      alert('Agent Died')
+    }
+    if (haveGold) {
+      let x = this.currentPosition[0]
+      let y = this.currentPosition[1]
+      this.actualBoard[x][y] += ' A'
+      await sleep(200)
+      alert('Agent Won!!!')
+    }
   }
 
   getDirection(): String {
