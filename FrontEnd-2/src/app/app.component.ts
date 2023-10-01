@@ -121,6 +121,7 @@ export class AppComponent {
   glitter: any;
   haveGold: any;
   remainingArrows: any;
+  directionString: String = 'NORTH';
 
   updateAgentsViewBoard(response: any): void {
     console.log(response);
@@ -235,6 +236,7 @@ export class AppComponent {
   play() {
     this.http.get<any>(`${this.BASE_URL}/play`).subscribe(response => {
       this.updateAgentsViewBoard(response);
+      this.directionString = this.getDirection();
       if (response.died) alert('Agent Died')
       if (response.haveGold) alert('Agent won')
 
@@ -244,6 +246,7 @@ export class AppComponent {
   }
 
   getDirection(): String {
+
     if (this.currentDirection[0] == 0 && this.currentDirection[1] == 1) return 'NORTH'
     else if (this.currentDirection[0] == 0 && this.currentDirection[1] == -1) return 'SOUTH'
     else if (this.currentDirection[0] == -1 && this.currentDirection[1] == 0) return 'WEST'

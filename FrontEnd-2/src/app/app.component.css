@@ -8,6 +8,18 @@ nav button {
   white-space: nowrap;
 }
 
+
+/* styles.css */
+
+.content-container {
+  background-color: #BFFFCD;
+  /* Replace with your desired background color */
+  /* padding: 20px;  */
+
+  /* Optional: Add padding to your container */
+}
+
+
 nav button.active {
   background-color: #4caf50;
   color: white;
@@ -65,6 +77,19 @@ nav button:hover:not(.active) {
   padding: 10px;
 }
 
+
+
+/* Define the class for resizable images */
+.resizable-image {
+  width: 100%;
+  /* Ensure the image fits within its container */
+  /* max-height: 100%;  */
+  height: auto;
+  /* Ensure the image fits within its container */
+}
+
+
+
 .grid-container {
   display: flex;
   justify-content: flex-start;
@@ -86,14 +111,16 @@ nav button:hover:not(.active) {
   font-size: 18px;
 }
 
-.with-image {
+/* .with-image {
   background-color: #6f1a1a;
-}
+} */
 
-img {
+
+
+/* img {
   max-width: 100%;
   max-height: 100%;
-}
+} */
 
 .matrix-container {
   display: flex;
@@ -119,14 +146,14 @@ img {
   cursor: pointer;
 }
 
-.matrix-cell img {
+/* .matrix-cell img {
   max-width: 100%;
   max-height: 100%;
 }
 
 .with-image {
   background-color: #f0f0f0;
-}
+} */
 
 .start-button {
   margin-left: 100 px;

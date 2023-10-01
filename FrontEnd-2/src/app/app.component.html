@@ -8,20 +8,17 @@
     <a href="https://github.com/SifatSikder/Wumpus-AI-Project" target="_blank" rel="noopener">
       GitHub Repository
     </a>
-
     <nav style="margin-top: 0.5rem;">
       <button (click)="generateBoard()">Generate Board</button>
       <div style="width: 1rem; display: inline-block;"></div>
 
-
-      <!-- <input type="file" (change)="onFileSelected($event)" accept=".csv" />
+      <!-- <input type="file" (change)="onFileSelected($event)" accept=".csv" /> -->
       <div style="display: inline-block; background-color: rgb(82, 141, 82); padding: 10px;">
         <h2>Upload from CSV</h2>
         <input type="file" (change)="onFileSelected($event)" accept=".csv" />
         <button (click)="uploadFromCsv()">Upload</button>
-        <div style="width: 1rem; display: inline-block;"></div>
-      </div> -->
-
+      </div>
+      <div style="width: 1rem; display: inline-block;"></div>
 
       <button (click)="play()">Play</button>
       <div style="width: 1rem; display: inline-block;"></div>
@@ -45,9 +42,18 @@
               <table class="matrix-grid">
                 <tr *ngFor="let row of actualBoard; let i = index">
                   <td *ngFor="let cell of row; let j = index" class="matrix-cell">
-                    {{actualBoard[i][j]}}
-                    <!-- <img *ngIf="actualBoard[i][j] === 'A'" src="assets/a6.png" alt="Image 1"> -->
-                    <!-- <img *ngIf="actualBoard[i][j] === 2" src="assets/g.jpg" alt="Image 2"> -->
+                    <!-- {{actualBoard[i][j]}} -->
+                    <img *ngIf="actualBoard[i][j] === 'A'" src="assets/agent.png" alt="A"
+                      class="resizable-image transparent-image">
+
+                    <img *ngIf="actualBoard[i][j] === 'P'" src="assets/pit-2.png" alt="P"
+                      class="resizable-image transparent-image">
+
+                    <img *ngIf="actualBoard[i][j] === 'W'" src="assets/wumpus.png" alt="W"
+                      class="resizable-image transparent-image">
+
+                    <img *ngIf="actualBoard[i][j] === 'G'" src="assets/gold-2.png" alt="G"
+                      class="resizable-image transparent-image">
                   </td>
                 </tr>
               </table>
@@ -77,6 +83,18 @@
                 <tr *ngFor="let row of actualBoard; let i = index">
                   <td *ngFor="let cell of row; let j = index" class="matrix-cell">
                     {{agentViewBoard[i][j]}}
+
+                    <img *ngIf="agentViewBoard[i][j] === '?W' " src="assets/stench.png" alt="?W"
+                      class="resizable-image transparent-image">
+
+                    <img *ngIf="agentViewBoard[i][j]=== '?P' " src="assets/breeze-3.png" alt="?P"
+                      class="resizable-image transparent-image">
+
+                    <img *ngIf="agentViewBoard[i][j] === 'OK A B S' || agentViewBoard[i][j] === 'OK A S'||agentViewBoard[i][j] === 'OK A' || agentViewBoard[i][j] === 'OK A B'
+                    " src="assets/agent.png" alt="Image 3" class="resizable-image transparent-image">
+
+
+
                   </td>
                 </tr>
               </table>
@@ -100,7 +118,7 @@
           </tr>
           <tr>
             <td class="matrix-cell">Current Direction</td>
-            <td class="matrix-cell">{{getDirection()}}</td>
+            <td class="matrix-cell">{{directionString}}</td>
           </tr>
           <tr>
             <td class="matrix-cell">Died</td>
