@@ -45,8 +45,8 @@
               <table class="matrix-grid">
                 <tr *ngFor="let row of actualBoard; let i = index">
                   <td *ngFor="let cell of row; let j = index" class="matrix-cell">
-                    <!-- {{actualBoard[i][j]}} -->
-                    <img *ngIf="actualBoard[i][j] === 'A'" src="assets/a6.png" alt="Image 1">
+                    {{actualBoard[i][j]}}
+                    <!-- <img *ngIf="actualBoard[i][j] === 'A'" src="assets/a6.png" alt="Image 1"> -->
                     <!-- <img *ngIf="actualBoard[i][j] === 2" src="assets/g.jpg" alt="Image 2"> -->
                   </td>
                 </tr>

@@ -286,6 +286,49 @@ function pitloopSituation() {
 
 }
 
+
+function isNorth(direction) {
+    return direction[0] == knowledgeBase.NORTH[0] && direction[1] == knowledgeBase.NORTH[1]
+}
+function isSouth(direction) {
+    return direction[0] == knowledgeBase.SOUTH[0] && direction[1] == knowledgeBase.SOUTH[1]
+}
+function isEast(direction) {
+    return direction[0] == knowledgeBase.EAST[0] && direction[1] == knowledgeBase.EAST[1]
+}
+function isWest(direction) {
+    return direction[0] == knowledgeBase.WEST[0] && direction[1] == knowledgeBase.WEST[1]
+}
+
+
+
+function changeDirection(from, to) {
+    if (isNorth(from)) {
+
+        if (isSouth(to)) { turnBackward() }
+        if (isEast(to)) { turn(right) }
+        if (isWest(to)) { turn(left) }
+    }
+    if (isSouth(from)) {
+        if (isNorth(to)) { turnBackward() }
+
+        if (isEast(to)) { turn(left) }
+        if (isWest(to)) { turn(right) }
+    }
+    if (isEast(from)) {
+        if (isNorth(to)) { turn(left) }
+        if (isSouth(to)) { turn(right) }
+
+        if (isWest(to)) { turnBackward() }
+    }
+    if (isWest(from)) {
+        if (isNorth(to)) { turn(right) }
+        if (isSouth(to)) { turn(left) }
+        if (isEast(to)) { turnBackward() }
+    }
+}
+
+
 function loopBreak() {
     if (remainingArrows <= 0) return false;
     let valid_squares = validSquares(position)
@@ -314,22 +357,18 @@ function loopBreak() {
     let col = probableWumpusSquare[1] - position[1]
 
     if (row == 0 && col == 1) {
-        direction = knowledgeBase.NORTH
-        directions.push(direction);
+        changeDirection(direction, knowledgeBase.NORTH)
     }
     else if (row == 0 && col == -1) {
-        direction = knowledgeBase.SOUTH
-        directions.push(direction);
+        changeDirection(direction, knowledgeBase.SOUTH)
     }
 
     else if (row == 1 && col == 0) {
-        direction = knowledgeBase.EAST
-        directions.push(direction);
+        changeDirection(direction, knowledgeBase.EAST)
     }
 
     else if (row == -1 && col == 0) {
-        direction = knowledgeBase.WEST
-        directions.push(direction);
+        changeDirection(direction, knowledgeBase.WEST)
     }
 
 
