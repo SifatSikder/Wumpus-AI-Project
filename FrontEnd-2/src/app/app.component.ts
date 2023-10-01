@@ -8,105 +8,15 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
 
-
-
-  //TO_DO:
-  //Here you will take a CSV file as input and will generate a 
-  //2D wumpus Board
-  //sample example from Kabir Sir:
-  //Input
-  // ---P--P---
-  // --W-------
-  // ------P---
-  // -----P----
-  // ---G------
-  // W-----P---
-  // ----------
-  // P------W--
-  // ---P--P---
-  // ----------
-  // OutPut: A 2D Array
-  // [
-  //   [0, 0, 0, 2, 0, 0, 2, 0, 0, 0],
-  //   [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 2, 0, 0, 0],
-
-  //   [0, 0, 0, 0, 0, 2, 0, 0, 0, 0],
-  //   [0, 0, 0, 3, 0, 0, 0, 0, 0, 0],
-  //   [1, 0, 0, 0, 0, 0, 2, 0, 0, 0],
-
-  //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  //   [2, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-  //   [0, 0, 0, 2, 0, 0, 2, 0, 0, 0],
-  //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  // ]
-
+  constructor(private http: HttpClient) { }
   selectedCsvFile: File | null = null;
-  onFileSelected(event: any) {
-    this.selectedCsvFile = event.target.files[0];
-  }
-
-  uploadFromCsv() {
-    if (!this.selectedCsvFile) {
-      console.error("No file selected");
-      return;
-    }
-
-    console.log('File selected:', this.selectedCsvFile.name);
-
-    const reader = new FileReader();
-    reader.onload = (e: any) => {
-
-      const csvData: string = e.target.result;
-      const rows: string[] = csvData.split('\n');
-
-      for (const row of rows) {
-        const rowData: string[] = row.split(',');
-        const boardRow: number[] = [];
-
-        for (const value of rowData) {
-          if (value === 'P')
-            boardRow.push(2); // Pit
-          else if (value === 'W')
-            boardRow.push(1); // Wumpus
-          else if (value === 'G')
-            boardRow.push(3); // Gold
-          else if (value === '-')
-            boardRow.push(0); // Empty
-          else if (value === 'A')
-            boardRow.push(4); // Agent
-          else
-            boardRow.push(0);
-
-        }
-        this.actualBoard.push(boardRow);
-      }
-      console.log('Parsed Wumpus Board:', this.actualBoard);
-      console.log(this.actualBoard);
-    };
-
-    reader.onerror = (e: any) => {
-      console.error('Error reading the file:', e.target.error);
-    };
-
-    // Read the selected CSV file as text
-    reader.readAsText(this.selectedCsvFile);
-
-    this.generateBoard();
-
-  }
 
   title = 'WUMPUS---AI';
-
   actualBoard: any[][] = [];
   agentViewBoard: any[][] = [];
   BASE_URL = 'http://localhost:8080';
   gameStarted: boolean = false;
   boardGenerated: boolean = false;
-  constructor(private http: HttpClient) { }
-
-
-
   currentDirection: any;
   currentPosition: any;
   pathMap: any;
@@ -181,36 +91,39 @@ export class AppComponent {
     }
   }
 
-  generateBoard(): void {
+  updateActualBoard(board: any): void {
+    for (let i = 0; i < board.length; i++) {
+      this.actualBoard[i] = [];
+      this.agentViewBoard[i] = [];
+      for (let j = 0; j < board[0].length; j++) {
+        if (board[i][j] == 0) {
+          this.actualBoard[i][j] = ' '
+        }
+        else if (board[i][j] == 1) {
+          this.actualBoard[i][j] = 'W'
+        }
+        else if (board[i][j] == 2) {
+          this.actualBoard[i][j] = 'P'
+        }
+        else if (board[i][j] == 3) {
+          this.actualBoard[i][j] = 'G'
+        }
+        else if (board[i][j] == 4) {
+          this.actualBoard[i][j] = 'A'
+          this.agentViewBoard[i][j] = 'A'
+        }
+      }
+    }
+    console.log('This is the actual generated board.');
+    console.log(this.actualBoard);
+  }
 
+  generateBoard(): void {
 
     //get request for generating actual board
     //return value will be a 2D board containing the agent,pit,wumpus and gold
     this.http.get<any>(`${this.BASE_URL}/generate`).subscribe(board => {
-      for (let i = 0; i < board.length; i++) {
-        this.actualBoard[i] = [];
-        this.agentViewBoard[i] = [];
-        for (let j = 0; j < board[0].length; j++) {
-          if (board[i][j] == 0) {
-            this.actualBoard[i][j] = ' '
-          }
-          else if (board[i][j] == 1) {
-            this.actualBoard[i][j] = 'W'
-          }
-          else if (board[i][j] == 2) {
-            this.actualBoard[i][j] = 'P'
-          }
-          else if (board[i][j] == 3) {
-            this.actualBoard[i][j] = 'G'
-          }
-          else if (board[i][j] == 4) {
-            this.actualBoard[i][j] = 'A'
-            this.agentViewBoard[i][j] = 'A'
-          }
-        }
-      }
-      console.log('This is the actual generated board.');
-      console.log(this.actualBoard);
+      this.updateActualBoard(board)
     });
     this.boardGenerated = true;
 
@@ -227,8 +140,10 @@ export class AppComponent {
     //     currentDirection: current direction of the agent
     // }
     this.http.get<any>(`${this.BASE_URL}/agentViewBoard`).subscribe(response => {
-      this.updateAgentsViewBoard(response);
       console.log('This is the agent\'s view board.');
+      console.log(response);
+
+      this.updateAgentsViewBoard(response);
       console.log(this.agentViewBoard);
     });
   }
@@ -251,5 +166,62 @@ export class AppComponent {
     else if (this.currentDirection[0] == 0 && this.currentDirection[1] == -1) return 'SOUTH'
     else if (this.currentDirection[0] == -1 && this.currentDirection[1] == 0) return 'WEST'
     else return 'EAST'
+  }
+
+  onFileSelected(event: any) {
+    this.selectedCsvFile = event.target.files[0];
+  }
+
+  uploadFromCsv() {
+    if (!this.selectedCsvFile) {
+      console.error("No file selected");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+
+      const csvData: string = e.target.result;
+      const rows: string[] = csvData.split('\r\n');
+
+      for (const row of rows) {
+        const rowData: string[] = row.split(',');
+        const boardRow: number[] = [];
+
+
+        for (const value of rowData) {
+          if (value === 'P')
+            boardRow.push(2); // Pit
+          else if (value === 'W')
+            boardRow.push(1); // Wumpus
+          else if (value === 'G')
+            boardRow.push(3); // Gold
+          else if (value === '-')
+            boardRow.push(0); // Empty
+          else if (value === 'A')
+            boardRow.push(4); // Agent
+        }
+        if (boardRow.length > 0) this.actualBoard.push(boardRow);
+      }
+      console.log('Parsed Wumpus Board:', this.actualBoard);
+      this.sendBoardtoServer(this.actualBoard);
+
+    };
+    reader.readAsText(this.selectedCsvFile);
+  }
+
+  sendBoardtoServer(board: any) {
+    this.http.post<any>(`${this.BASE_URL}/setboard`, { board }).subscribe(response => {
+      this.updateActualBoard(response)
+      this.boardGenerated = true;
+
+      this.http.get<any>(`${this.BASE_URL}/agentViewBoard`).subscribe(response => {
+        this.updateAgentsViewBoard(response);
+        console.log('This is the agent\'s view board.');
+        console.log(this.agentViewBoard);
+      });
+    });
+
+
+
   }
 }

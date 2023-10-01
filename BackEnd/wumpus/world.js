@@ -20,6 +20,14 @@ function initializeBoard(size) {
     return board
 }
 
+function setWorld(board) {
+    size = board.length;
+    numberOfWumpus = totalWumpus(board);
+    world = board
+    setStartLocation()
+    printWorld(size)
+}
+
 function generateWorld(SIZE, wumpusProbablity, pitProbablity) {
     size = SIZE;
     numberOfWumpus = 0;
@@ -93,10 +101,21 @@ function generateWorld(SIZE, wumpusProbablity, pitProbablity) {
     //     [0, 0, 0, 0, 0, 2, 1, 0, 0, 0],
 
     // ]
-    numberOfWumpus = 17
-    startingPosition = [0, 0]
-    printWorld(SIZE)
+    // numberOfWumpus = 17
+    // startingPosition = [0, 0]
+    // printWorld(SIZE)
 }
+
+function totalWumpus(world) {
+    let wumpus = 0
+    for (let i = 0; i < world.length; i++) {
+        for (let j = 0; j < world[0].length; j++) {
+            if (world[i][j] == 1) wumpus++;
+        }
+    }
+    return wumpus
+}
+
 
 function setStartLocation() {
     startingPosition = [0, 0]
@@ -207,6 +226,7 @@ function printWorld(size) {
 module.exports = {
     generateWorld,
     printWorld,
+    setWorld,
     numberOfWumpus: () => numberOfWumpus,
     startingPosition: () => startingPosition,
     world: () => world,

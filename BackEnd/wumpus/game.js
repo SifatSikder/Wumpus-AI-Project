@@ -15,6 +15,17 @@ function createGame(SIZE, wumpusProbablity, pitProbablity, AGENT) {
 }
 
 
+function setGame(board, AGENT) {
+    size = board.length
+    score = 1000
+    agent = AGENT
+    world.setWorld(board);
+    agent.setPosition(world.startingPosition())
+    agent.setRemainingArrows(world.numberOfWumpus())
+    return world.world()
+}
+
+
 function setStench(POSITION) {
 
     let stench = false;
@@ -208,6 +219,7 @@ module.exports = {
     processShot,
     agentGrabsGold,
     validSquares,
+    setGame,
     world: () => world,
     score: () => score,
     size: () => size,

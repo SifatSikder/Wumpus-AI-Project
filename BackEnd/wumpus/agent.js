@@ -10,6 +10,7 @@ var directions = [];
 var stench, breeze, died, scream, glitter, haveGold, remainingArrows;
 
 function sendInfo() {
+
     return {
         pathMap: knowledgeBase.pathMap(),
         wumpusMap: knowledgeBase.wumpusMap(),

@@ -7,6 +7,7 @@ app.use(cors())
 
 //body parser configutation
 const bodyParser = require('body-parser');
+const { wumpusMap } = require('./wumpus/knowledgeBase');
 app.use(bodyParser.json());
 
 
@@ -24,6 +25,14 @@ app.get('/generate', (req, res) => {
     agent.start(game);
     res.status(200).json(board);
 })
+app.post('/setboard', (req, res) => {
+    agent = require('./wumpus/agent')
+    game = require('./wumpus/game')
+    let { board } = req.body
+    board = game.setGame(board, agent)
+    agent.start(game);
+    res.status(200).json(board);
+})
 
 app.get('/agentViewBoard', (req, res) => {
     res.status(200).json(agent.sendInfo());
@@ -33,3 +42,7 @@ app.get('/play', (req, res) => {
     agent.play()
     res.status(200).json(agent.sendInfo());
 })
+
+
+
+
