@@ -74,7 +74,7 @@
     1. If direction ==left:
         1. If the current direction of the agent (agent.direction) equals to kb.north/south/east/west then we will set the direction (agent.direction= kb.west/east/north/south)
     2. If direction ==right:
-        2. If the current direction of the agent (agent.direction) equals to kb.north/south/east/west then we will set the direction (agent.direction= kb.east/west/south/north)
+        1. If the current direction of the agent (agent.direction) equals to kb.north/south/east/west then we will set the direction (agent.direction= kb.east/west/south/north)
     Deduct a score by 1
 
 
