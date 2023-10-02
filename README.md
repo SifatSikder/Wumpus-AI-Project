@@ -1,12 +1,12 @@
 # Wumpus-AI-Project
-# Initial Design Document  
-**Driver Class:**
+## Initial Design Document  
+### Driver Class:
 
 1. Create an agent
 2. Create the game with size, the reasoning agent just created, and the probability of wumpus, pit and obstacle
 3. Run the created agent.start(created game) function which will return the game status boolean variable. If true ⇒ agent won else lost
 
-**Agent Class:**
+### Agent Class:
 
 1. Constant: left=0 ,right =1
 2. Properties:
@@ -53,7 +53,7 @@
             3. Else If the right score is less than the risk factor then turn right, make the move, print the board, and return
             4. Else we need to backtrack⇒ 2 possibilities⇒ backtracked or not(in this case increase the risk factor)
 
-**Game Class:**
+### Game Class:
 1. Properties: world (2d int),agent, size,score
 2. Constructor: int size, Agent agent, double wumpusProb, double pitProb, double obsProb
     1. Generate the world from the world.generate function by providing the size and the 3 probabilities
@@ -92,7 +92,7 @@
 6. agentGrabsgold(): 
     1. If the square in the world at index= agent.current position is 4(glittering) then set the square value 0(gold picked), game over =true and score +=1000 and win=true
  
-**KnowledgeBase Class:**
+### KnowledgeBase Class:
 
 1. Constants: east/west/north/south ⇒ 1d array , clear=-1 , direction= north,east,west,south
 2. Properties: move stack,turn stack, path map,wumpus map,pit map,obstacle map,glitter position
@@ -114,7 +114,7 @@ registerTurn(int direction):
 12. Boolean askGlitter(position): return glitter==position 
 13. tellscream(position,direction): if obstacleMap[position]>0 then clear the wumpus and return else clear the wumpus and update the position=position+direction until the position(both x and y) is <wumpusMap.length
   
-**World Class:**
+### World Class:
 1. Properties: Number of wumpus, starting position. Both should be constant
 2. Constant 2d board generateWorld(size, wumpusProbablity,pitProbablity, obstacleProbablity):
     1. Create a 2d board[size+2][size+2]
