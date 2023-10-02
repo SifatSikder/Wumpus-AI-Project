@@ -16,22 +16,22 @@
     4. A game object to play and a kb to build the knowledge to play the game
     5. Constructor⇒ number of arrow will be assigned from the world.Number of wumpus
 3. Methods:  
- 1. start(game):
-    1. Initialize the game variable of agent class (game=game)
-    2. Create a new knowledge base with the game size
-    3. Set the default direction in north
-    4. Register the move in the knowledge base. kb.registermove(current position⇒x,y)
-    5. Play the game in a while true loop, while(true) play();
- 2. move():
-    1.  Check the result of the game.moveAgent().
-    2.  If false, means a bump, run kb.tellbump(pos-x,pos-y,direction) and then return
-    3.  Else register the move in the kb⇒ kb.registermove(current position⇒x,y)
-    4.  After moving, process the current percept⇒ processPercepts(current position⇒x,y)
-3. processPercepts(position⇒x,y)
-    1. if(glitter): kb.tellglitter(position⇒x,y)
-    2. Else if(breeze): kb.tellbreeze(position⇒x,y)
-    3. Else if(stench): kb.tellstench(position⇒x,y)
-    4. Else kb.tellclear(position⇒x,y)
+    1. start(game):
+        1. Initialize the game variable of agent class (game=game)
+        2. Create a new knowledge base with the game size
+        3. Set the default direction in north
+        4. Register the move in the knowledge base. kb.registermove(current position⇒x,y)
+        5. Play the game in a while true loop, while(true) play();
+    2. move():
+        1.  Check the result of the game.moveAgent().
+        2.  If false, means a bump, run kb.tellbump(pos-x,pos-y,direction) and then return
+        3.  Else register the move in the kb⇒ kb.registermove(current position⇒x,y)
+        4.  After moving, process the current percept⇒ processPercepts(current position⇒x,y)
+    3. processPercepts(position⇒x,y)
+        1. if(glitter): kb.tellglitter(position⇒x,y)
+        2. Else if(breeze): kb.tellbreeze(position⇒x,y)
+        3. Else if(stench): kb.tellstench(position⇒x,y)
+        4. Else kb.tellclear(position⇒x,y)
 4. turn(direction)
 game.turnAgent(direction)
 kb.registerTurn(direction)
