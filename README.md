@@ -32,25 +32,25 @@
         2. Else if(breeze): kb.tellbreeze(position⇒x,y)
         3. Else if(stench): kb.tellstench(position⇒x,y)
         4. Else kb.tellclear(position⇒x,y)
-4. turn(direction)
-game.turnAgent(direction)
-kb.registerTurn(direction)
-shoot()
-Use an arrow to shoot. Numarrows- - ;
-game.processShot()
-process the current percept⇒ processPercepts(current position⇒x,y)
-pickGold():
-game.grabGold()
-play()
-if(kb.askglitter()): pickGold() return;
-State the riskFactor=-2
-There are 3 possible moves and hence three possible score to calculate: forward,left,right
-If direction=kb.north ask the kb if there is any possibility to have any wumpus,pit,obstacle in the next column(forward score),previous/after row(left/right score) 
-Do the step in ‘d’ for other 3 direction
-If the forward score is less than the risk factor,left and right score then make the move, print the board, and return
-Else If the left score is less than the risk factor and right score then turn left, make the move, print the board, and return
-Else If the right score is less than the risk factor then turn right, make the move, print the board, and return
-Else we need to backtrack⇒ 2 possibilities⇒ backtracked or not(in this case increase the risk factor)
+    4. turn(direction)
+        game.turnAgent(direction)
+        kb.registerTurn(direction)
+    5.shoot()
+        Use an arrow to shoot. Numarrows- - ;
+        game.processShot()
+        process the current percept⇒ processPercepts(current position⇒x,y)
+    pickGold():
+        game.grabGold()
+    play()
+        if(kb.askglitter()): pickGold() return;
+        State the riskFactor=-2
+        There are 3 possible moves and hence three possible score to calculate: forward,left,right
+        If direction=kb.north ask the kb if there is any possibility to have any wumpus,pit,obstacle in the next column(forward score),previous/after row(left/right score) 
+        Do the step in ‘d’ for other 3 direction
+        If the forward score is less than the risk factor,left and right score then make the move, print the board, and return
+        Else If the left score is less than the risk factor and right score then turn left, make the move, print the board, and return
+        Else If the right score is less than the risk factor then turn right, make the move, print the board, and return
+        Else we need to backtrack⇒ 2 possibilities⇒ backtracked or not(in this case increase the risk factor)
 
 Game Class:
 Properties: world (2d int),agent, size,score
