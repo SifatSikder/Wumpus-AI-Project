@@ -94,25 +94,26 @@
  
 **KnowledgeBase Class:**
 
-Constants: east/west/north/south ⇒ 1d array , clear=-1 , direction= north,east,west,south
-Properties: move stack,turn stack, path map,wumpus map,pit map,obstacle map,glitter position
-Constructor(): initialize all the map (map[size][size]) and all map entry as 0 and the glitter and the move and turn stacks
-perceive(position,map): for each direction if the square is valid then increase square value in the map by 1
-registerMove(position):
-Add the move in move stack
-As the move has happened so the agent is sure that the square is clear. So update the square of wumpus,pit and obstacle map= clear and increase the square value of the pathMap by 1
+1. Constants: east/west/north/south ⇒ 1d array , clear=-1 , direction= north,east,west,south
+2. Properties: move stack,turn stack, path map,wumpus map,pit map,obstacle map,glitter position
+3. Constructor(): initialize all the map (map[size][size]) and all map entry as 0 and the glitter and the move and turn stacks
+4. perceive(position,map): for each direction if the square is valid then increase square value in the map by 1
+5. registerMove(position):
+    1. Add the move in move stack
+    2. As the move has happened so the agent is sure that the square is clear. So update the square of wumpus,pit and obstacle map= clear and increase the square value of the pathMap by 1
 registerTurn(int direction):
-If direction=0/1(left/right) then add the direction in the turnstack 
-tellClear(position):
-For each direction Find all the neighboring squares.
-If a square within the range(0.. <length) then mark that square in the wumpus and pit map as clear
-Int askPath/pit/wumpus(position): return the value of the square of path/pit/wumpus map at index(pos-x,pos-y)
-tellStench/breeze(position): if the square at the mentioned position is unvisited or visited only 1 time (pathMap[pos-x][pos-y]<=1) then perceive this position with the wumpus/pit map
-tellBump(position,direction): increase the value of the square of the obstacleMap at index [pos+dir-x][pos+dir-x] by 1
-tellGlitter(position): set the glitter=position
-Int askObstacle(position): if the square at the mentioned position of obstacle Map is > 0 (obstacle present) then return a high score (100)
-Boolean askGlitter(position): return glitter==position 
-tellscream(position,direction): if obstacleMap[position]>0 then clear the wumpus and return else clear the wumpus and update the position=position+direction until the position(both x and y) is <wumpusMap.length
+    1. If direction=0/1(left/right) then add the direction in the turnstack 
+6. tellClear(position):
+    1. For each direction Find all the neighboring squares.
+    2. If a square within the range(0.. <length) then mark that square in the wumpus and pit map as clear
+7. Int askPath/pit/wumpus(position): return the value of the square of path/pit/wumpus map at index(pos-x,pos-y)
+8. tellStench/breeze(position): if the square at the mentioned position is unvisited or visited only 1 time (pathMap[pos-x][pos-y]<=1) then perceive this position with the wumpus/pit map
+9. tellBump(position,direction): increase the value of the square of the obstacleMap at index [pos+dir-x][pos+dir-x] by 1
+10. tellGlitter(position): set the glitter=position
+11. Int askObstacle(position): if the square at the mentioned position of obstacle Map is > 0 (obstacle present) then return a high score (100)
+12. Boolean askGlitter(position): return glitter==position 
+13. tellscream(position,direction): if obstacleMap[position]>0 then clear the wumpus and return else clear the wumpus and update the position=position+direction until the position(both x and y) is <wumpusMap.length
+  
 **World Class:**
 1. Properties: Number of wumpus, starting position. Both should be constant
 2. Constant 2d board generateWorld(size, wumpusProbablity,pitProbablity, obstacleProbablity):
