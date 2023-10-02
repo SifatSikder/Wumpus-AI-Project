@@ -23,10 +23,10 @@
     4. Register the move in the knowledge base. kb.registermove(current position⇒x,y)
     5. Play the game in a while true loop, while(true) play();
  2. move():
-  1.  Check the result of the game.moveAgent().
-  2.  If false, means a bump, run kb.tellbump(pos-x,pos-y,direction) and then return
-  3.  Else register the move in the kb⇒ kb.registermove(current position⇒x,y)
-  4.  After moving, process the current percept⇒ processPercepts(current position⇒x,y)
+    1.  Check the result of the game.moveAgent().
+    2.  If false, means a bump, run kb.tellbump(pos-x,pos-y,direction) and then return
+    3.  Else register the move in the kb⇒ kb.registermove(current position⇒x,y)
+    4.  After moving, process the current percept⇒ processPercepts(current position⇒x,y)
 3. processPercepts(position⇒x,y)
  1. if(glitter): kb.tellglitter(position⇒x,y)
  2. Else if(breeze): kb.tellbreeze(position⇒x,y)
