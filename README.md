@@ -53,45 +53,46 @@
             3. Else If the right score is less than the risk factor then turn right, make the move, print the board, and return
             4. Else we need to backtrack⇒ 2 possibilities⇒ backtracked or not(in this case increase the risk factor)
 
-Game Class:
-Properties: world (2d int),agent, size,score
-Constructor: int size, Agent agent, double wumpusProb, double pitProb, double obsProb
-Generate the world from the world.generate function by providing the size and the 3 probabilities
-Initialize the agent and the agent’s starting point(agent.position= world.starting_position)
-Initialize the size and the score=1000
-getscore(): return score
-Boolean moveAgent(): 
-Take the old position from agent.postion
-Check if there is any obstacle or not by checking a particular square value==3 where the index is the agent's current position+current direction. If yes then return false
-Else Check if there is any wumpus or pit or not by checking a particular square value==1 or 2 where the index is the agent's current position+current direction. If yes then deduct score by 1000,agent.died and gameover is true, and exit the system.
-Else update the new position by doing position = position+direction (execute the move)
-Now send the new percepts to the agent:
-Check the neighboring 4 squares in the world and if any square has a wumpus/breeze (value = 1/2) then agent.stench/breeze=true else false
-If there is a glitter in the current position then agent.glitter=true or false
-Deduct a score by 1
-Return true
-turnAgent(direction):
-If direction ==left:
-If the current direction of the agent (agent.direction) equals to kb.north/south/east/west then we will set the direction (agent.direction= kb.west/east/north/south)
-If direction ==right:
-If the current direction of the agent (agent.direction) equals to kb.north/south/east/west then we will set the direction (agent.direction= kb.east/west/south/north)
-Deduct a score by 1
+**Game Class:**
+1. Properties: world (2d int),agent, size,score
+2. Constructor: int size, Agent agent, double wumpusProb, double pitProb, double obsProb
+    1. Generate the world from the world.generate function by providing the size and the 3 probabilities
+    2. Initialize the agent and the agent’s starting point(agent.position= world.starting_position)
+    3. Initialize the size and the score=1000
+
+3. Boolean moveAgent(): 
+    1. Take the old position from agent.postion
+    2. Check if there is any obstacle or not by checking a particular square value==3 where the index is the agent's current position+current direction. If yes then return false
+    3. Else Check if there is any wumpus or pit or not by checking a particular square value==1 or 2 where the index is the agent's current position+current direction. If yes then deduct score by 1000,agent.died and gameover is true, and exit the system.
+    4. Else update the new position by doing position = position+direction (execute the move)
+    5. Now send the new percepts to the agent:
+        1. Check the neighboring 4 squares in the world and if any square has a wumpus/breeze (value = 1/2) then agent.stench/breeze=true else false
+        2. If there is a glitter in the current position then agent.glitter=true or false
+        3. Deduct a score by 1
+        4. Return true
+4. turnAgent(direction):
+    1. If direction ==left:
+        1. If the current direction of the agent (agent.direction) equals to kb.north/south/east/west then we will set the direction (agent.direction= kb.west/east/north/south)
+    2. If direction ==right:
+        2. If the current direction of the agent (agent.direction) equals to kb.north/south/east/west then we will set the direction (agent.direction= kb.east/west/south/north)
+    Deduct a score by 1
 
 
 
 
 
 
-processShot():
-if the current direction=north then perform a loop in a row forward way until the last square. 
-If any of the square contains a wumpus(world[][]=1) then
-Kill the wumpus(set world[][]=0)
-Agent will heard the scream (agent.screamHeard=true) and return
-Else if it hits any obstacle (world[][]=3 ) then make agent.screamHeard=false and break the loop
+5. processShot():
+    1. if the current direction=north then perform a loop in a row forward way until the last square. 
+    2. If any of the square contains a wumpus(world[][]=1) then
+    3. Kill the wumpus(set world[][]=0)
+    4. Agent will heard the scream (agent.screamHeard=true) and return
+    5. Else if it hits any obstacle (world[][]=3 ) then make agent.screamHeard=false and break the loop
 
-agentGrabsgold(): 
-If the square in the world at index= agent.current position is 4(glittering) then set the square value 0(gold picked), game over =true and score +=1000 and win=true
- KnowledgeBase Class:
+6. agentGrabsgold(): 
+    1. If the square in the world at index= agent.current position is 4(glittering) then set the square value 0(gold picked), game over =true and score +=1000 and win=true
+ 
+**KnowledgeBase Class:**
 
 Constants: east/west/north/south ⇒ 1d array , clear=-1 , direction= north,east,west,south
 Properties: move stack,turn stack, path map,wumpus map,pit map,obstacle map,glitter position
