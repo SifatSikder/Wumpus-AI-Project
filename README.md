@@ -113,29 +113,29 @@ tellGlitter(position): set the glitter=position
 Int askObstacle(position): if the square at the mentioned position of obstacle Map is > 0 (obstacle present) then return a high score (100)
 Boolean askGlitter(position): return glitter==position 
 tellscream(position,direction): if obstacleMap[position]>0 then clear the wumpus and return else clear the wumpus and update the position=position+direction until the position(both x and y) is <wumpusMap.length
-World Class:
-Properties: Number of wumpus, starting position. Both should be constant
-Constant 2d board generateWorld(size, wumpusProbablity,pitProbablity, obstacleProbablity):
-Create a 2d board[size+2][size+2]
-numWumpus=0
-Populate the world
-Place gold in the world
-Set Start Location in the world
-Return the board
-setStartLocation(board):
-Set  startingPosition=[0,0] or randomEmptyLocation(board)
-randomEmptyLocation(board):
-Perform a infinite loop 
-Generate 2(x,y) random value(between 0-1) and multiply it by board length and convert it in integer
-If board[x][y]=0 then return [x,y]
-placeGold(board):
-Set  goldPosition=randomEmptyLocation(board)
-board [ goldPosition[0]  ] [ goldPosition[1]  ] = 4
-populateWorld(board,wumpusProbablity,pitProbablity, obstacleProbablity):
-Go to each cell in the board and if
-i=0 or j=0 or i=length-1 or j= length -1 then board[x][y]=3 and continue;
-Generate a random value and if random value <= wumpusProbablity then board[x][y]=1 and increase the number of wumpus and continue 
-Generate a random value and if random value <= pitProbablity then board[x][y]=2 and continue 
-Generate a random value and if random value <= obstacleProbablity then board[x][y]=3 and continue 
+**World Class:**
+1. Properties: Number of wumpus, starting position. Both should be constant
+2. Constant 2d board generateWorld(size, wumpusProbablity,pitProbablity, obstacleProbablity):
+    1. Create a 2d board[size+2][size+2]
+    2. numWumpus=0
+    3. Populate the world
+    4. Place gold in the world
+    5. Set Start Location in the world
+    6. Return the board
+3. setStartLocation(board):
+    1. Set  startingPosition=[0,0] or randomEmptyLocation(board)
+4. randomEmptyLocation(board):
+    1. Perform a infinite loop 
+    2. Generate 2(x,y) random value(between 0-1) and multiply it by board length and convert it in integer
+    3. If board[x][y]=0 then return [x,y]
+5. placeGold(board):
+    1. Set  goldPosition=randomEmptyLocation(board)
+    2. board [ goldPosition[0]  ] [ goldPosition[1]  ] = 4
+6. populateWorld(board,wumpusProbablity,pitProbablity, obstacleProbablity):
+    1. Go to each cell in the board and if
+    2. i=0 or j=0 or i=length-1 or j= length -1 then board[x][y]=3 and continue;
+    3. Generate a random value and if random value <= wumpusProbablity then board[x][y]=1 and increase the number of wumpus and continue 
+    4. Generate a random value and if random value <= pitProbablity then board[x][y]=2 and continue 
+    5. Generate a random value and if random value <= obstacleProbablity then board[x][y]=3 and continue 
 
 
