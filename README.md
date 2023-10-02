@@ -10,11 +10,11 @@
 
 1. Constant: left=0 ,right =1
 2. Properties:
- 1. Position and direction: 1D array
- 2. Breeze,stench,scream,died,glitter, havegold,bump (optional for obstacle) ⇒ boolean
- 3. Number of arrows: int
- 4. A game object to play and a kb to build the knowledge to play the game
- 5. Constructor⇒ number of arrow will be assigned from the world.Number of wumpus
+    1. Position and direction: 1D array
+    2. Breeze,stench,scream,died,glitter, havegold,bump (optional for obstacle) ⇒ boolean
+    3. Number of arrows: int
+    4. A game object to play and a kb to build the knowledge to play the game
+    5. Constructor⇒ number of arrow will be assigned from the world.Number of wumpus
 3. Methods:  
  1. start(game):
     1. Initialize the game variable of agent class (game=game)
