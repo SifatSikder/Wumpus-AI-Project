@@ -1,37 +1,38 @@
 # Wumpus-AI-Project
 # Initial Design Document  
-Driver Class: 
+**Driver Class:**
 
-1.Create an agent
+1. Create an agent
 2. Create the game with size, the reasoning agent just created, and the probability of wumpus, pit and obstacle
-3.Run the created agent.start(created game) function which will return the game status boolean variable. If true ⇒ agent won else lost
+3. Run the created agent.start(created game) function which will return the game status boolean variable. If true ⇒ agent won else lost
 
-Agent Class:
+**Agent Class:**
 
-Constant: left=0 ,right =1
-Properties:
-Position and direction: 1D array
-Breeze,stench,scream,died,glitter, havegold,bump (optional for obstacle) ⇒ boolean
-Number of arrows: int
-A game object to play and a kb to build the knowledge to play the game
-Constructor⇒ number of arrow will be assigned from the world.Number of wumpus
-start(game):
-Initialize the game variable of agent class (game=game)
-Create a new knowledge base with the game size
-Set the default direction in north
-Register the move in the knowledge base. kb.registermove(current position⇒x,y)
-Play the game in a while true loop, while(true) play();
-move():
-Check the result of the game.moveAgent(). 
-If false, means a bump, run kb.tellbump(pos-x,pos-y,direction) and then return
-Else register the move in the kb⇒ kb.registermove(current position⇒x,y)
-After moving, process the current percept⇒ processPercepts(current position⇒x,y)
-processPercepts(position⇒x,y)
-if(glitter): kb.tellglitter(position⇒x,y)
-Else if(breeze): kb.tellbreeze(position⇒x,y)
-Else if(stench): kb.tellstench(position⇒x,y)
-Else kb.tellclear(position⇒x,y)
-turn(direction)
+1. Constant: left=0 ,right =1
+2. Properties:
+ 1. Position and direction: 1D array
+ 2. Breeze,stench,scream,died,glitter, havegold,bump (optional for obstacle) ⇒ boolean
+ 3. Number of arrows: int
+ 4. A game object to play and a kb to build the knowledge to play the game
+ 5. Constructor⇒ number of arrow will be assigned from the world.Number of wumpus
+3. Methods:  
+ 1. start(game):
+    1. Initialize the game variable of agent class (game=game)
+    2. Create a new knowledge base with the game size
+    3. Set the default direction in north
+    4. Register the move in the knowledge base. kb.registermove(current position⇒x,y)
+    5. Play the game in a while true loop, while(true) play();
+ 2. move():
+  1.  Check the result of the game.moveAgent().
+  2.  If false, means a bump, run kb.tellbump(pos-x,pos-y,direction) and then return
+  3.  Else register the move in the kb⇒ kb.registermove(current position⇒x,y)
+  4.  After moving, process the current percept⇒ processPercepts(current position⇒x,y)
+3. processPercepts(position⇒x,y)
+ 1. if(glitter): kb.tellglitter(position⇒x,y)
+ 2. Else if(breeze): kb.tellbreeze(position⇒x,y)
+ 3. Else if(stench): kb.tellstench(position⇒x,y)
+ 4. Else kb.tellclear(position⇒x,y)
+4. turn(direction)
 game.turnAgent(direction)
 kb.registerTurn(direction)
 shoot()
